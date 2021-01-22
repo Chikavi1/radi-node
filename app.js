@@ -1,3 +1,5 @@
+const express = require('express');
+const app = express();
 
 
-console.log('hola razita jaja');
+app.use();
