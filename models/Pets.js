@@ -2,13 +2,17 @@ const Sequelize = require('sequelize');
 const db = require('../config/db');
 
 
-const Pets = db.define('Pets',{
+const Pets = db.define('pets',{
     id:{
         type: Sequelize.INTEGER(11),
         primaryKey: true,
         autoIncrement: true
     },
     name: Sequelize.STRING(100),
+    photo: {
+        type: Sequelize.TEXT(),
+        allowNull: true
+    },
     age: {
         type:Sequelize.INTEGER(11),
         allowNull: true
@@ -21,20 +25,17 @@ const Pets = db.define('Pets',{
     description: Sequelize.TEXT(),
     vacumms_id: {
         type: Sequelize.INTEGER(11),
-        allowNull: false
+        allowNull: true
     },
     userId: {
         type: Sequelize.INTEGER(11),
-        allowNull: false
+        allowNull: true
     },
     verified:{
         type: Sequelize.INTEGER(11),
-        allowNull: false
+        allowNull: true
     },
-    estatus: {
-        type: Sequelize.INTEGER(11),
-        allowNull: false
-    }
+    estatus:  Sequelize.INTEGER(11),
 });
 
 
