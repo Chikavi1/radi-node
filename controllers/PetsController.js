@@ -6,10 +6,18 @@ const pool = require('./../database');
 //     res.send('index perros');
 // }
 
-exports.create = async (req,res,next) => {
+exports.create = (req,res) => {
+  res.render('crearPerro',{
+    nombrePagina: 'Adopta un amigo, ya!',
+});
+}
+
+exports.store = async (req,res,next) => {
 
 
     const { name,photo,age,city,color,description,vacumms_id,userId,verified,estatus } = req.body;
+
+    console.log(req.body);
 
     const pets = await Pets.create({
        name,
@@ -71,4 +79,32 @@ exports.index = (req, res,next) => {
       })
     });
 
+}
+
+// exports.uploadImage = (req, res,next) => {
+//   console.log(req.name);
+
+//   if (!req.files) {
+//       return res.status(500).send({ msg: "Archivo no encontrado" })
+//   }
+//   const myFile = req.files.file;
+    
+//   myFile.mv( path.join(__dirname, '../'+'public/images/'+ Date.now() + myFile.name ) , function (err) {
+//       if (err) {
+//           console.log(err)
+//           return res.status(500).send({ msg: "Error" });
+//       }
+//       return res.send({name: myFile.name, path: `/${myFile.name}`});
+//   });
+// }
+
+
+exports.adopta = async (req,res) => {
+ const pets = await Pets.findAll();
+
+ console.log(pets);
+ 
+  res.render('adopta',{
+    nombrePagina: 'Adopta un amigo, ya!',
+});
 }
