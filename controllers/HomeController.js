@@ -1,5 +1,14 @@
 
 
 exports.landingPage = (req,res,next) => {
-    res.send('que pasa chaval jaja');
+    res.render('landingPage',{
+        nombrePagina: 'Radi',
+        tagline: 'Encuentra a tu mejor amigo aqui!'
+    });
+}
+
+exports.about = (req,res) => {
+    res.render('acerca',{
+        nombrePagina: "Acerca de Radi"
+    })
 }
