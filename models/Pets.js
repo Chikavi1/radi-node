@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
+const Organizations = require('./Organizations');
+const Usuarios = require('./Usuarios');
 
 
 const Pets = db.define('pets',{
@@ -23,20 +25,41 @@ const Pets = db.define('pets',{
         allowNull: true 
     },
     description: Sequelize.TEXT(),
-    vacumms_id: {
-        type: Sequelize.INTEGER(11),
+    size: {
+        type: Sequelize.STRING,
         allowNull: true
     },
+    race: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    gender: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    status:  Sequelize.INTEGER(1),
     userId: {
         type: Sequelize.INTEGER(11),
         allowNull: true
     },
     verified:{
+        type: Sequelize.INTEGER(1),
+        allowNull: true
+    },
+    specie: Sequelize.STRING,
+    code: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    geolocation: Sequelize.STRING,
+    organizationId: {
         type: Sequelize.INTEGER(11),
         allowNull: true
     },
-    estatus:  Sequelize.INTEGER(11),
 });
+
+Pets.belongsTo(Organizations);
+Pets.belongsTo(Usuarios);
 
 
 module.exports = Pets;

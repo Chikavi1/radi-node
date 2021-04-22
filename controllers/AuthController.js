@@ -2,6 +2,13 @@ const passport = require('passport');
 const Usuarios = require('../models/Usuarios');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+const enviarEmail = require('../handlers/email');
+
 
 exports.login = (req,res) => {
     res.render('login',{
@@ -91,17 +98,18 @@ exports.loginApi = async(req,res,next) => {
 
 
   const  { email,password } = req.body;
-  console.log(email,password);
   const usuario = await Usuarios.findOne({ where: { email  }});
+  console.log(usuario);
   if(!usuario){
-    await res.status(401).json({ mensaje : 'Ese usuario no existe' });
+    await res.status(401).json({ mensaje : 'Usuario no existe.' });
     next();
   }else{
     if(!bcrypt.compareSync(password, usuario.password )){
-        await res.status(401).json({ mensaje : 'Contraseña es incorrecta' });
+        await res.status(401).json({ mensaje : 'Contraseña incorrecta.' });
         next();
     }else{
         const token = jwt.sign({
+            name: usuario.name,
             email: usuario.email,
             id: usuario.id,
 
@@ -118,13 +126,98 @@ exports.loginApi = async(req,res,next) => {
 
 }
 
-exports.registerApi = async(req,res) => {
-    let { email,password } = req.body;
-    try{
-         await Usuarios.create({email,password});
-        res.json({mensaje:'Usuario Creado'});
-    }catch(error){
-        console.log(error);
-        res.json({mensaje: 'Hubo un error'});
+exports.registerApi = async(req,res,next) => {
+
+    let { name,email,password } = req.body;
+    const usuario = await Usuarios.findOne({ where: { email  } });   
+    if(usuario){
+        await res.status(401).json({ mensaje : 'Ese usuario ya existe' });
+        next();
     }
+    try{
+            await Usuarios.create({ name,email,password });
+            res.json({ mensaje:'Usuario Creado'} );
+        }catch(error){
+            console.log(error);
+            res.json({ mensaje: 'Hubo un error'} );
+        }
+    res.json({ mensaje:'Usuario Creado' });
+    
+}
+
+
+exports.enviarToken = async (req,res) => {
+    const { email } = req.body;
+    const usuario = await Usuarios.findOne({ where: { email  }});
+
+    if(!usuario){
+        req.flash('error','no existe esa cuenta');
+        res.redirect('/reestablecer');
+    }
+
+// falta verificar que no sea de google papi eso es aqui
+
+    usuario.token = crypto.randomBytes(20).toString('hex');
+    usuario.expiration = Date.now() + 3600000;
+
+   await usuario.save();
+   
+   const resetUrl = `http://localhost:3000/reestablecer/${usuario.token}`;
+//    console.log(resetUrl);
+
+   //envia el correo con el token
+   await enviarEmail.enviar({
+       usuario,
+       subject: 'Reestablecer contraseña',
+       resetUrl,
+       archivo: 'reestablecer-password'
+   });
+
+   res.json({ mensaje:'Se ha enviado el correo' });
+
+
+}
+
+
+exports.actualizarPassword = async (req,res) => {
+    console.log(req.body.password);
+    console.log('-------------------');
+    console.log(req.params.token);
+    console.log('******************');
+
+    const usuario = await Usuarios.findOne({ 
+        where: {
+            token: req.params.token,
+            
+        } 
+    });
+
+    if(!usuario){
+        res.json({ mensaje:'error,token no valido' });
+
+    }
+    
+
+    usuario.password = bcrypt.hashSync(req.body.password,bcrypt.genSaltSync(10));
+    usuario.token = null;
+    usuario.expiracion = null;
+    await usuario.save();
+    res.json({ mensaje:'Se ha actualizado la contraseña satisfactoriamente.' });
+}
+
+
+exports.validarToken = async(req,res) => {
+    
+    const usuario = await Usuarios.findOne({
+     where: {
+         token: req.params.token
+     }
+    });
+
+ if(!usuario){
+    res.json({ mensaje:'token no valido.',estatus: false });
+
+ }
+    res.json({ mensaje:'token valido.',estatus: true });
+
 }

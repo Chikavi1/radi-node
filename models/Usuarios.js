@@ -8,6 +8,7 @@ const Usuarios = db.define('Users',{
         primaryKey: true,
         autoIncrement: true
     },
+    name: Sequelize.STRING(60),
     email: {
         type: Sequelize.STRING(60),
         allowNull: false,
@@ -24,10 +25,10 @@ const Usuarios = db.define('Users',{
             msg: 'Usuario ya registrado'
         }
     },
-    googleId:{
-        type: Sequelize.STRING(60),
-        allowNull: true
-    },
+    address: Sequelize.STRING,
+    city: Sequelize.STRING(100),
+    cellphone: Sequelize.INTEGER(11),
+    invoice_id: Sequelize.INTEGER,
     password: {
         type: Sequelize.STRING(60),
         allowNull: false,
@@ -37,13 +38,22 @@ const Usuarios = db.define('Users',{
             }
         }
     },
-    name: Sequelize.STRING(60),
-    activo:{
+    active:{
         type: Sequelize.INTEGER,
         defaulValue: 0 
     },
     token: Sequelize.STRING,
-    expiracion: Sequelize.DATE
+    expiration: Sequelize.DATE,
+    identification: Sequelize.INTEGER,
+    share_location: Sequelize.INTEGER(1),
+    googleId:{
+        type: Sequelize.STRING(60),
+        allowNull: true
+    },
+    points: Sequelize.INTEGER
+    
+    
+    
 },{
     hooks: {
         beforeCreate(usuario){

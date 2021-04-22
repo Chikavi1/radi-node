@@ -9,13 +9,16 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('./config/passport');
+var cors = require('cors')
 
 const socketIO = require('socket.io');
 const Donations = require('./models/Donations');
 
+require('./models/Usuarios');
 
 require('./models/Pets');
 require('./models/Donations');
+require('./models/Organizations');
 
 db.sync()
 .then(()=> {
@@ -24,6 +27,7 @@ db.sync()
 
 
 const app = express();
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -40,7 +44,7 @@ exphbs({
 
 app.set('view engine','handlebars');
 app.use(express.static('public'));
-
+app.use(express.static('uploads'));
 //añadir carperta vista
 app.set('views', path.join(__dirname,'./views'));
 
@@ -70,7 +74,7 @@ app.use((req,res,next) => {
 
 app.use('/',routes());
 const host = process.env.HOST || '0.0.0.0';
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const server = app.listen(port,host,() => {
     console.log('Servido iniciado.');
