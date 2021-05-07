@@ -1,22 +1,25 @@
-const express = require('express');
-const routes  = require('./routes');
-const path    = require('path');
-const bodyParser = require('body-parser');
+const cors = require('cors');
+const path = require('path');
 const db = require('./config/db');
-const exphbs = require('express-handlebars');
-// const expressValidator = require('express-validator');
+const express = require('express');
+const routes = require('./routes');
+const socketIO = require('socket.io');
 const flash = require('connect-flash');
+const bodyParser = require('body-parser');
 const session = require('express-session');
+const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const passport = require('./config/passport');
-var cors = require('cors')
-
-const socketIO = require('socket.io');
 const Donations = require('./models/Donations');
+// const expressValidator = require('express-validator');
 
-require('./models/Usuarios');
+// Config. de servidor -----------------------------------|
+const host = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT || 8080;
 
+// Modelos -----------------------------------------------|
 require('./models/Pets');
+require('./models/Usuarios');
 require('./models/Donations');
 require('./models/Organizations');
 
@@ -25,43 +28,26 @@ db.sync()
     console.log('conectado al server');
 }).catch( error => console.log( error ));
 
-
+// Servidor Express --------------------------------------|
 const app = express();
+
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-// cargar archivos estaticos
-
-// habilitar pug
-app.engine('handlebars',
-exphbs({
+// Motor de Vistas
+app.engine('handlebars', exphbs({
     defaultLayout: 'layout'
-})
-);
-
+}));
 app.set('view engine','handlebars');
+
+// Rutas estáticas.
 app.use(express.static('public'));
 app.use(express.static('uploads'));
-//añadir carperta vista
 app.set('views', path.join(__dirname,'./views'));
 
-//agregar flash messages
+// Flash messages
 app.use(flash());
-
-app.use(cookieParser());
-//sessiones  nos permite navegar entre distintas paginas sin volvernos autenticar
-app.use(session({
-    secret: 'supersecreto',
-    resave: false,
-    saveUninitialized: false
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use((req,res,next) => {
     res.locals.mensajes = req.flash();
     res.locals.usuario = { ...req.user } || null;
@@ -69,16 +55,29 @@ app.use((req,res,next) => {
     next();
 });
 
+// Cookies
+app.use(cookieParser());
 
+// Sesiones
+app.use(session({
+    secret: 'supersecreto',
+    resave: false,
+    saveUninitialized: false
+}));
 
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
+// Rutas
 app.use('/',routes());
-const host = process.env.HOST || '0.0.0.0';
-const port = process.env.PORT || 8080;
 
+// Arranque del servidor
 const server = app.listen(port,host,() => {
     console.log('Servido iniciado.');
 });
+
+// Sockets se necesita mover de aquí
 const io = socketIO(server);
 
 io.on('connection',(socket) => {
