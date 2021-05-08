@@ -4,7 +4,7 @@ const Pets = require('../models/Pets');
 
 async function createPets(){
 
-    for(let i=0; i < 300;i++){
+    for(let i=0; i < 10;i++){
 
         const name           = faker.name.findName();
         const photo          = faker.random.image();

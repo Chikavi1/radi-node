@@ -8,14 +8,14 @@ async function createVaccine(){
 
         const name    = faker.lorem.word();
         const type    = 1;
-        const petId   = faker.datatype.number({ 'min': 1,
+        const pet_id   = faker.datatype.number({ 'min': 1,
         'max': 20});
         const estatus = 1;
         
         await Vaccines.create({
             name,
             type,
-            petId,
+            pet_id,
             estatus
         });
     }

@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "Elradipet10Lt#",
+    "password": null,
     "database": "radi",
     "host": "127.0.0.1",
     "dialect": "mysql"
