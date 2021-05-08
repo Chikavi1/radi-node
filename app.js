@@ -1,6 +1,6 @@
 const cors = require('cors');
 const path = require('path');
-const db = require('./config/db');
+// const db = require('./config/db');
 const express = require('express');
 const routes = require('./routes');
 const socketIO = require('socket.io');
@@ -10,7 +10,7 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const passport = require('./config/passport');
-const Donations = require('./models/Donations');
+// const Donations = require('./models/Donations');
 // const expressValidator = require('express-validator');
 
 // Config. de servidor -----------------------------------|
@@ -18,16 +18,13 @@ const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || 8080;
 
 // Modelos -----------------------------------------------|
-require('./models/Pets');
-require('./models/Usuarios');
-require('./models/Donations');
-require('./models/Organizations');
 
-db.sync()
-.then(()=> {
-    console.log('conectado al server');
-}).catch( error => console.log( error ));
-
+module.exports = {
+	config: path.resolve('./src/database/config', 'config.js'),
+	'models-path': path.resolve('./src/database/models'),
+	'seeders-path': path.resolve('./src/database/seeders'),
+	'migrations-path': path.resolve('./src/database/migrations'),
+};
 // Servidor Express --------------------------------------|
 const app = express();
 

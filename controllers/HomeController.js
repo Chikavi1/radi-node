@@ -1,4 +1,4 @@
-sexports.landingPage = (req,res,next) => {
+exports.landingPage = (req,res,next) => {
     res.send("XD")
 }
 
