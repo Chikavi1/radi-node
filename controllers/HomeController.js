@@ -1,10 +1,5 @@
-
-
-exports.landingPage = (req,res,next) => {
-    res.render('landingPage',{
-        nombrePagina: 'Radi',
-        tagline: 'Encuentra a tu mejor amigo aqui!'
-    });
+sexports.landingPage = (req,res,next) => {
+    res.send("XD")
 }
 
 exports.about = (req,res) => {

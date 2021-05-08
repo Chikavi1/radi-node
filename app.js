@@ -36,15 +36,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Motor de Vistas
-app.engine('handlebars', exphbs({
+/*app.engine('handlebars', exphbs({
     defaultLayout: 'layout'
-}));
-app.set('view engine','handlebars');
+}));*/
+app.set('view engine','pug');
 
 // Rutas estáticas.
 app.use(express.static('public'));
 app.use(express.static('uploads'));
 app.set('views', path.join(__dirname,'./views'));
+
+// Sesiones
+app.use(session({
+    secret: 'supersecreto',
+    resave: false,
+    saveUninitialized: false
+}));
 
 // Flash messages
 app.use(flash());
@@ -57,13 +64,6 @@ app.use((req,res,next) => {
 
 // Cookies
 app.use(cookieParser());
-
-// Sesiones
-app.use(session({
-    secret: 'supersecreto',
-    resave: false,
-    saveUninitialized: false
-}));
 
 // Passport
 app.use(passport.initialize());
