@@ -2,7 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 // REferencia la modelo donde vamos a autenticar
-const Usuarios  = require('../models/Usuarios');
+const Usuarios  = require('../models/users');
 
 
 passport.use(

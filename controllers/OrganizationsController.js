@@ -1,4 +1,4 @@
-const Organizations = require('../models/Organizations');
+const Organizations = require('../models/organizations');
 
 
 

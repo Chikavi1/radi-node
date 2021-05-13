@@ -4,15 +4,13 @@ const router = express.Router();
 // controladores
 const HomeController = require('../controllers/HomeController');
 const PetsController = require('../controllers/PetsControllerController');
-const DonationsController = require('../controllers/DonationsController');
+//const DonationsController = require('../controllers/DonationsController');
 const AuthController = require('../controllers/AuthController');
 const EmailController = require('../controllers/EmailController');
 const OrganizationsController = require('../controllers/OrganizationsController');
 const VaccinesController  = require('../controllers/VaccinesController');
 const AdoptionsController = require('../controllers/AdoptionsController');
-
-
-
+const ReservationsController = require('../controllers/ReservationsController');
 
 const auth = require('../middleware/Auth');
 
@@ -53,10 +51,10 @@ module.exports = function(){
     PetsController.store);
     router.get('/pets/update',PetsController.update);
 
-    router.get('/donations',DonationsController.get);
-    router.post('/donations',DonationsController.create);
+    //router.get('/donations',DonationsController.get);
+    //router.post('/donations',DonationsController.create);
 
-    router.get('/donaciones',DonationsController.donacion);
+    //router.get('/donaciones',DonationsController.donacion);
 
     router.post('/send_email',EmailController.sendEmail);
 
@@ -66,6 +64,9 @@ module.exports = function(){
     // Organizations
     router.get('/organizaciones',OrganizationsController.index);
     router.post('/organizaciones',OrganizationsController.store);
+
+    // Reservations
+    router.get('/reservations/:idVet', ReservationsController.getReservations);
     
     // Vaccines
     router.get('/vaccines/:petId', VaccinesController.show);

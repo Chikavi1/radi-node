@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     id_pet: DataTypes.STRING,
     time: DataTypes.DATE
   }, {
-    sequelize,
+    sequelize: sequelize,
     modelName: 'Reservations',
   });
   return Reservations;
