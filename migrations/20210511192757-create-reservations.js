@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Reservations', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,32 +11,24 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      email: {
+      note: {
         type: Sequelize.STRING
       },
-      password: {
+      payment: {
+        type: Sequelize.INTEGER
+      },
+      price: {
+        type: Sequelize.INTEGER
+      },
+      id_vet: {
         type: Sequelize.STRING
       },
-      address: {
+      id_pet: {
         type: Sequelize.STRING
       },
-      city: {
-        type: Sequelize.STRING,
+      time: {
+        type: Sequelize.DATE
       },
-      cellphone: Sequelize.INTEGER(11),
-      invoice_id: Sequelize.INTEGER,
-      active:{
-        type: Sequelize.INTEGER,
-        defaulValue: 0 
-      },
-      expiration: Sequelize.DATE,
-      identification: Sequelize.INTEGER,
-      share_location: Sequelize.INTEGER(1),
-      googleId:{
-          type: Sequelize.STRING(60),
-          allowNull: true
-      },
-      points: Sequelize.INTEGER,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -48,6 +40,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Reservations');
   }
 };
