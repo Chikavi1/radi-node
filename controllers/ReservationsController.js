@@ -6,13 +6,29 @@ const DB = require('../config/db');
 const Pets = require('../models/Pets');
 const Reservations = require('../models/reservations');
 
-module.exports.getReservations = async (req, res) => {
+module.exports.getReservations = async (req, res) => { /// FALTA CREAR VETS
 
-    await Reservations(DB, DataTypes).findAll({
-        attributes: ['note', 'time', 'id_pet']
-        /*where: {
+    let week = [];
+    let [result, meta] = await DB.query('select p.name, r.note, r.time, r.id_pet from reservations r inner join pets p on p.id=r.id_pet where r.id_vet='+req.params.idVet);
+    console.log(result.length);
+
+    result.forEach((item) => {
+
+        if (week[moment(item.time).day()]) {
+            week[moment(item.time).day()].push(item);
+        } else {
+            week[moment(item.time).day()] = [item];
+        }
+
+    })
+
+    res.json(week);
+
+    /*await Reservations(DB, DataTypes).findAll({
+        attributes: ['note', 'time', 'id_pet'],
+        where: {
             id_vet: req.params.idVet
-        }*/
+        }
     }).then(async (reservations) => {
 
         let counter = 0, week = [];
@@ -52,6 +68,6 @@ module.exports.getReservations = async (req, res) => {
 
     }).catch((err) => {
         res.json({error: 'Valio cabeza'});
-    });
+    });*/
 
 }
