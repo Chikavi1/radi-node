@@ -66,7 +66,8 @@ module.exports = function(){
     router.post('/organizaciones',OrganizationsController.store);
 
     // Reservations
-    router.get('/reservations/:idVet', ReservationsController.getReservations);
+    router.get('/reservations_week/:idVet', ReservationsController.getReservationsWeek);
+    router.post('/create-reservation', ReservationsController.insertReservation);
     
     // Vaccines
     router.get('/vaccines/:petId', VaccinesController.show);
