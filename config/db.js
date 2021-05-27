@@ -6,7 +6,7 @@ module.exports = new Sequelize('radi','root','12345',{
     port: 3306,
     operatorsAliases: false,
     define: {
-        timestamps: false
+        timestamps: true
     },
     pool: {
         max: 5,
