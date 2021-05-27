@@ -32,7 +32,6 @@ module.exports.getReservationsWeek = async (req, res) => {
 module.exports.insertReservation = async (req, res) => {
 
     const { name, note, payment, price, id_vet, id_pet, time } = req.body;
-    console.log(req.body);
 
     await Reservations(DB, DataTypes).create({
         name: name,
