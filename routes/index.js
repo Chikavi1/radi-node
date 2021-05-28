@@ -68,11 +68,11 @@ module.exports = function(){
 
     // Reservations
     router.get('/reservations_week/:idVet', ReservationsController.getReservationsWeek);
-    router.post('/create-reservation', ReservationsController.insertReservation);
+    router.post('/create_reservation', ReservationsController.insertReservation);
 
     // Vets
     router.get('/get_vet/:idVet', VetsController.getVet);
-    router.post('/create_reservation', VetsController.createVet);
+    router.post('/create_vet', VetsController.createVet);
     
     // Vaccines
     router.get('/vaccines/:petId', VaccinesController.show);

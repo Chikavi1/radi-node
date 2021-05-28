@@ -16,8 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   };
   Vets.init({
     name: DataTypes.STRING,
-    location: DataTypes.STRING,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    profile: DataTypes.STRING,
+    latitude: DataTypes.STRING,
+    longitude: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    services: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Vets',
