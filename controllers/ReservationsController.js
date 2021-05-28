@@ -4,7 +4,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 const DB = require('../config/db');
 const Pets = require('../models/Pets');
-const Reservations = require('../models/reservations');
+const Reservations = require('../models/Reservations');
 
 module.exports.getReservationsWeek = async (req, res) => {
 
@@ -30,6 +30,8 @@ module.exports.getReservationsWeek = async (req, res) => {
 }
 
 module.exports.insertReservation = async (req, res) => {
+
+    // Validar Reservaciones que no choquen
 
     const { name, note, payment, price, id_vet, id_pet, time } = req.body;
 

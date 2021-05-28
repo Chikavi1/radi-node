@@ -3,7 +3,7 @@ const router = express.Router();
 
 // controladores
 const HomeController = require('../controllers/HomeController');
-const PetsController = require('../controllers/PetsControllerController');
+const PetsController = require('../controllers/PetsController');
 //const DonationsController = require('../controllers/DonationsController');
 const AuthController = require('../controllers/AuthController');
 const EmailController = require('../controllers/EmailController');
@@ -11,6 +11,7 @@ const OrganizationsController = require('../controllers/OrganizationsController'
 const VaccinesController  = require('../controllers/VaccinesController');
 const AdoptionsController = require('../controllers/AdoptionsController');
 const ReservationsController = require('../controllers/ReservationsController');
+const VetsController = require('../controllers/VetsController');
 
 const auth = require('../middleware/Auth');
 
@@ -68,13 +69,17 @@ module.exports = function(){
     // Reservations
     router.get('/reservations_week/:idVet', ReservationsController.getReservationsWeek);
     router.post('/create-reservation', ReservationsController.insertReservation);
+
+    // Vets
+    router.get('/get_vet/:idVet', VetsController.getVet);
+    router.post('/create_reservation', VetsController.createVet);
     
     // Vaccines
     router.get('/vaccines/:petId', VaccinesController.show);
     router.post('/vaccines', VaccinesController.add);
     router.put('/vaccines/:id',VaccinesController.update);
 
-// adoptions
+    // adoptions
     router.post('/adoptions', AdoptionsController.add);
     router.get('/adoptions_user/:userId',AdoptionsController.show);
     // router.get('/adoptions_pet/:userId')
