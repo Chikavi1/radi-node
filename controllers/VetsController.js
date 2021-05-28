@@ -3,7 +3,7 @@ const moment = require('moment');
 const { Sequelize, DataTypes } = require('sequelize');
 
 const DB = require('../config/db');
-const Vets = require('../models/vets');
+const Vets = require('../models/Vets');
 
 module.exports.getVet = async (req, res) => {
     

@@ -1,4 +1,4 @@
-const Adoptions = require('../models/adoptions');
+const Adoptions = require('../models/Adoptions');
 
 
 exports.add = (req,res) => {
