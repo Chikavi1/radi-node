@@ -3,23 +3,23 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.addColumn('vets', 'phone', {
+      queryInterface.addColumn('Vets', 'phone', {
         type: Sequelize.STRING,
         allowNull: true
       }),
-      queryInterface.addColumn('vets', 'services', {
+      queryInterface.addColumn('Vets', 'services', {
         type: Sequelize.STRING,
         allowNull: true
       }),
-      queryInterface.addColumn('vets', 'profile', {
+      queryInterface.addColumn('Vets', 'profile', {
         type: Sequelize.STRING,
         allowNull: true
       }),
-      queryInterface.addColumn('vets', 'latitude', {
+      queryInterface.addColumn('Vets', 'latitude', {
         type: Sequelize.STRING,
         allowNull: true
       }),
-      queryInterface.addColumn('vets', 'longitude', {
+      queryInterface.addColumn('Vets', 'longitude', {
         type: Sequelize.STRING,
         allowNull: true
       })
@@ -28,11 +28,11 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('vets', 'phone'),
-      queryInterface.removeColumn('vets', 'services'),
-      queryInterface.removeColumn('vets', 'profile'),
-      queryInterface.removeColumn('vets', 'latitude'),
-      queryInterface.removeColumn('vets', 'longitude')
+      queryInterface.removeColumn('Vets', 'phone'),
+      queryInterface.removeColumn('Vets', 'services'),
+      queryInterface.removeColumn('Vets', 'profile'),
+      queryInterface.removeColumn('Vets', 'latitude'),
+      queryInterface.removeColumn('Vets', 'longitude')
     ]);
   }
 };
