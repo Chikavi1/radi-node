@@ -3,7 +3,7 @@ const router = express.Router();
 
 // controladores
 const HomeController = require('../controllers/HomeController');
-const PetsController = require('../controllers/PetsControllerController');
+const PetsController = require('../controllers/PetsController');
 //const DonationsController = require('../controllers/DonationsController');
 const AuthController = require('../controllers/AuthController');
 const EmailController = require('../controllers/EmailController');
