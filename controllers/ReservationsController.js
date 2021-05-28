@@ -31,6 +31,8 @@ module.exports.getReservationsWeek = async (req, res) => {
 
 module.exports.insertReservation = async (req, res) => {
 
+    // Validar Reservaciones que no choquen
+
     const { name, note, payment, price, id_vet, id_pet, time } = req.body;
 
     await Reservations(DB, DataTypes).create({
