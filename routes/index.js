@@ -12,6 +12,8 @@ const VaccinesController  = require('../controllers/VaccinesController');
 const AdoptionsController = require('../controllers/AdoptionsController');
 const ReservationsController = require('../controllers/ReservationsController');
 const VetsController = require('../controllers/VetsController');
+const ProductsController = require('../controllers/ProductsController');
+const ServicesController = require('../controllers/ServicesController');
 
 const auth = require('../middleware/Auth');
 
@@ -72,7 +74,18 @@ module.exports = function(){
 
     // Vets
     router.get('/get_vet/:idVet', VetsController.getVet);
+    router.put('/update_vet', VetsController.updateVet);
     router.post('/create_vet', VetsController.createVet);
+
+    // Products
+    router.get('/get_products/:idVet', ProductsController.getProducts);
+    router.put('/update_product', ProductsController.updateProduct);
+    router.post('/create_product', ProductsController.createProduct);
+
+    // Services
+    router.get('/get_services/:idVet', ServicesController.getServices);
+    router.put('/update_service', ServicesController.updateService);
+    router.post('/create_service', ServicesController.createService);
     
     // Vaccines
     router.get('/vaccines/:petId', VaccinesController.show);
