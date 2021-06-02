@@ -8,7 +8,7 @@ const Reservations = require('../models/Reservations');
 
 module.exports.getReservationsWeek = async (req, res) => {
 
-    let week = [];
+    let week = [null, null, null, null, null, null, null];
     let currentDate = moment();
     let weekStart = currentDate.clone().startOf('week');
     let weekEnd = currentDate.clone().endOf('week');
@@ -24,11 +24,13 @@ module.exports.getReservationsWeek = async (req, res) => {
 
         item = item.dataValues;
 
-        if (moment(item.time).isBetween(weekStart, weekEnd))
-            if (week[moment(item.time).day()])
+        if (moment(item.time).isBetween(weekStart, weekEnd)) {
+            if (week[moment(item.time).day()]) {
                 week[moment(item.time).day()].push(item);
-            else
+            }else {
                 week[moment(item.time).day()] = [item];
+            }
+        }
 
     })
 

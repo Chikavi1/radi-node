@@ -18,6 +18,23 @@ module.exports.getVet = async (req, res) => {
 
 }
 
+module.exports.updateVet = async (req, res) => {
+
+    const updatedVet = req.body;
+
+    await Vets(DB, DataTypes).update(
+        updatedVet,
+        { where: { "id": req.body.id } })
+        .then(data => {
+            res.status(200);
+            res.json(data);
+        }).catch(err => {
+            res.status(503);
+            res.send(err);
+        })
+
+}
+
 module.exports.createVet = async (req, res) => {
 
     const { name, profile, phone, description, services, latitude, longitude } = req.body;
