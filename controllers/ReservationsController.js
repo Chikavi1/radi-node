@@ -42,8 +42,10 @@ module.exports.getReservationsWeek = async (req, res) => {
 module.exports.insertReservation = async (req, res) => {
 
     let notAvailable = false;
+    let payment_accepted = true;
     const { name, note, payment, price, id_vet, id_pet, time, duration } = req.body;
 
+    // Validacion Horario
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), {foreignKey: 'id_pet'});
     Reservations(DB, DataTypes).belongsTo(Pets(DB, DataTypes), {foreignKey: 'id'})
     let result = await Reservations(DB, DataTypes).findAll({where: {"id_vet": id_vet}});
@@ -56,9 +58,14 @@ module.exports.insertReservation = async (req, res) => {
 
     });
 
+    // Codigo
+
     if (notAvailable) {
         res.status(503);
         res.send('Horario no disponible');
+    } else if (!payment_accepted) { // Pago NO aceptado
+        res.status(503);
+        res.send('Pago no aceptado');
     } else {
         await Reservations(DB, DataTypes).create({
             name,
