@@ -33,7 +33,7 @@ module.exports.getVets = async (req, res) => {
 
 module.exports.nearVets = async (req, res) => {
 
-    const {longitude, latitude} = req.body;
+    const {longitude, latitude} = req.params;
 
     try {
 
