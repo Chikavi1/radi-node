@@ -74,6 +74,8 @@ module.exports = function(){
 
     // Vets
     router.get('/get_vet/:idVet', VetsController.getVet);
+    router.get('/get_vets/:offset/:limit', VetsController.getVets);
+    router.get('/near_vets/:lat/:long', VetsController.nearVets);
     router.put('/update_vet', VetsController.updateVet);
     router.post('/create_vet', VetsController.createVet);
 

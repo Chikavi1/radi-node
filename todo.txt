@@ -1,11 +1,6 @@
-TODO 26/05/2021
+TODO 03/06/2021
 
-Veterinarios
-    - Nombre
-    - Telefono
-    - Descricpción
-    - Servicios
-    - Imagen Perfil
-    - Ubicaci
-
-    Quitar location, poner longitud y latitud
+Agregar status para borrado logico
+Agregar categoria Servicios
+Relación Servicios y Reservaciones
+Subir Imagen
