@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     time_start: DataTypes.DATE,
     time_end: DataTypes.DATE,
     id_vet: DataTypes.STRING,
-    weekend: DataTypes.BOOLEAN
+    weekend: DataTypes.BOOLEAN,
+    status: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Isolations',
