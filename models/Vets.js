@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     longitude: DataTypes.STRING,
     phone: DataTypes.STRING,
     services: DataTypes.STRING,
-    id_user: DataTypes.INTEGER
+    id_user: DataTypes.INTEGER,
+    status: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Vets',
