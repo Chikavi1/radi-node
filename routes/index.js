@@ -49,9 +49,11 @@ module.exports = function(){
 
     router.get('/pets/:id',PetsController.show);
 
-    router.post('/pets/store',
-    PetsController.subirArchivo,
-    PetsController.store);
+
+    router.post('/upload_img', PetsController.subirArchivo);
+
+    router.post('/pets/store', PetsController.store);
+
     router.get('/pets/update',PetsController.update);
 
     //router.get('/donations',DonationsController.get);

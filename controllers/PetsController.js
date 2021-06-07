@@ -1,13 +1,18 @@
 const Pets = require('../models/Pets');
-const pool = require('../database');
-const { Op } = require("sequelize");
+// const pool = require('../database');
+const { Op, json } = require("sequelize");
+
+
+const { Sequelize, DataTypes, where } = require('sequelize');
+
+const DB = require('../config/db');
 
 
 const shortid = require('shortid');
 const multer = require('multer');
 
 const configuracionMulter = {
-  limits: {  fileSize : 1000000 },
+  limits: {  fileSize : 5000000 },
   storage: fileStorage = multer.diskStorage({
     destination: (req,file,cb) => {
       cb(null,__dirname+'/../uploads')
@@ -21,6 +26,15 @@ const configuracionMulter = {
 
 const upload =  multer(configuracionMulter).single('photo');
 
+exports.subirArchivo = (req,res,next) => {
+
+  upload(req,res,async(error) => {
+    if(error){
+      res.json({mensaje: error})
+    }
+    return res.json(req.file.filename);
+  });
+}
 
 
 
@@ -61,52 +75,69 @@ exports.create = (req,res) => {
 });
 }
 
-exports.subirArchivo = (req,res,next) => {
-  
-  upload(req,res,async(error) => {
-      if(error){
-        res.json({mensaje: error})
-      }
-      return next();
-    });
 
-}
 
 exports.store = async (req,res,next) => {
   
+  console.log(req.body);
       
-  const { name,photo,age,city,color,description,size,race,gender,status,vacumms_id,user_id,verified,specie,code,geolocation } = req.body;
+  const { 
+    
+    name,
+    photo,
+    age,
+    city,
+    color,
+    description,
+    size,
+    breed,
+    gender,
+    status,
+    vacumms_id,
+    id_user,
+    verified,
+    specie,
+    code,
+    geolocation } = req.body;
 
   try{
 
-    if(req.file.filename){
-      imagen  = req.file.filename;
-    }else{
-      imagen = 'chales no jalo jaja';
-    }
-    res.json({ archivo: req.file.filename })
-    const pets = await Pets.create({
-      name,
+    // if(req.file.filename){
+    //   imagen  = req.file.filename;
+    // }else{
+      // }
+      
+        imagen = 'chales no jalo jaja';
+
+    // res.json({ archivo: req.file.filename })
+     await Pets(DB, DataTypes).create({
+      name : name,
       photo: imagen,
       age,
       city,
       color,
       description,
       size,
-      race,
+      breed,
       gender,
       status:1,
       vacumms_id:1,
-      useId,
+      id_user,
       verified: 0,
       specie,
-      code: 'dsahugivhj',
+      code: 'aasdasdasahusada2',
       geolocation
-    });
+    }).then(() => {
+      res.status(200);
+      res.send('OK');
+  }).catch((err) => {
+      res.status(503);
+      res.send(err);
+  });
     
-    if(!pets) return next();
+    // if(!pets) return next();
     
-    res.status(200).send('Perro Creado correctamente');
+    // res.status(200).send('Perro Creado correctamente');
   }catch(error){
     console.log(error);
     next();
@@ -119,10 +150,11 @@ exports.store = async (req,res,next) => {
 exports.show = async (req,res) => {
   const { id } = req.params;
 
-  const pets = await Pets.findOne({
+  const pets = await await Pets(DB, DataTypes).findOne({
     where: { id }
   });
 
+  pets.photo = "http://localhost:8080/"+pets.photo;
   console.log(pets)
 
   res.json(pets);
