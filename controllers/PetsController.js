@@ -112,7 +112,7 @@ exports.store = async (req,res,next) => {
     // res.json({ archivo: req.file.filename })
      await Pets(DB, DataTypes).create({
       name : name,
-      photo: imagen,
+      photo,
       age,
       city,
       color,
