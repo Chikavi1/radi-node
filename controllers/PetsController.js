@@ -36,9 +36,6 @@ exports.subirArchivo = (req,res,next) => {
   });
 }
 
-
-
-
 exports.index = async (req,res) => {
 
   let specie = req.query.specie;
@@ -69,13 +66,48 @@ exports.index = async (req,res) => {
     res.json(pets);
 }
 
-exports.create = (req,res) => {
-  res.render('crearPerro',{
-    nombrePagina: 'Adopta un amigo, ya!',
-});
+exports.updatePet = async (req, res) => {
+
+  const updatedPet = req.body;
+
+  await Pets(DB, DataTypes).update(
+    updatedPet,
+    { where: { "id": req.body.id, "status": {[Op.ne]: 0}} })
+    .then(data => {
+      res.status(200);
+      res.json({ msg: data });
+    }).catch(err => {
+      res.status(503);
+      res.send(err);
+    })
+
 }
 
+exports.adoptionsAvailable = async (req, res) => {
 
+  await Pets(DB, DataTypes).findAll({where: {"status": 2}})
+    .then(data => {
+        res.status(200);
+        res.json(data);
+    }).catch(err => {
+        res.status(503);
+        res.send(err);
+    })
+
+}
+
+exports.getPetsByUser = async (req, res) => {
+
+  await Pets(DB, DataTypes).findAll({where: {"id_user": req.params.id_user, "status": {[Op.ne]: 0}}})
+    .then(data => {
+        res.status(200);
+        res.json(data);
+    }).catch(err => {
+        res.status(503);
+        res.send(err);
+    })
+
+}
 
 exports.store = async (req,res,next) => {
   
@@ -147,10 +179,25 @@ exports.store = async (req,res,next) => {
   
 }
 
+exports.deletePet = async (req, res) => {
+
+  await Pets(DB, DataTypes).update(
+    {status: 0},
+    { where: { "id": req.body.id } })
+    .then(data => {
+      res.status(200);
+      res.json({ msg: data });
+    }).catch(err => {
+      res.status(503);
+      res.send(err);
+    })
+
+}
+
 exports.show = async (req,res) => {
   const { id } = req.params;
 
-  const pets = await await Pets(DB, DataTypes).findOne({
+  const pets = await Pets(DB, DataTypes).findOne({
     where: { id }
   });
 
@@ -158,10 +205,6 @@ exports.show = async (req,res) => {
   console.log(pets)
 
   res.json(pets);
-}
-
-exports.update = (req,res,next) => {
-    res.send('update')
 }
 
 
@@ -220,15 +263,3 @@ exports.update = (req,res,next) => {
 //       return res.send({name: myFile.name, path: `/${myFile.name}`});
 //   });
 // }
-
-
-exports.adopta = async (req,res) => {
- const pets = await Pets.findAll();
-
- console.log(pets);
- 
-  res.render('adopta',{
-    nombrePagina: 'Adopta un amigo, ya!',
-    pets
-});
-}

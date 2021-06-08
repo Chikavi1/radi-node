@@ -1,6 +1,6 @@
 //const { DataTypes } = require('sequelize/types');
 const moment = require('moment');
-const { Sequelize, DataTypes, where } = require('sequelize');
+const { Sequelize, DataTypes, where, Op } = require('sequelize');
 const Stripe = require('stripe');
 const stripe = new Stripe('sk_test_yA1c9PFKtvAHmekF9apQQYlm00tWTyzmTI ');
 
@@ -50,16 +50,14 @@ module.exports.insertReservation = async (req, res) => {
     // Validacion Horario
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });
     Reservations(DB, DataTypes).belongsTo(Pets(DB, DataTypes), { foreignKey: 'id' })
-    let result = await Reservations(DB, DataTypes).findAll({ where: { "id_vet": id_vet } });
-
-    result.forEach(item => {
-
-        item = item.dataValues;
-
-        notAvailable = moment(time).isBetween(moment(item.time), moment(item.time).add(item.duration, 'm'));
-
+    let result = await Reservations(DB, DataTypes).findAll({
+        where: {
+            "id_vet": id_vet,
+            "time" : {[Op.between] : [moment(time) , moment(time).add(duration, 'm')]}
+        }
     });
 
+    notAvailable = result.length;
 
     if (notAvailable) {
         res.status(503);
@@ -67,7 +65,7 @@ module.exports.insertReservation = async (req, res) => {
         return;
     }
 
-    // Codigo
+    /* Codigo
     try {
 
         const payment = await stripe.paymentIntents.create({
@@ -89,9 +87,8 @@ module.exports.insertReservation = async (req, res) => {
         console.log(error);
         payment_accepted = false;
         // return res.json({ message: error })
-    }
+    }*/
     // Codigo
-
 
 
     if (!payment_accepted) { // Pago NO aceptado

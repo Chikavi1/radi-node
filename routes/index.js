@@ -42,19 +42,17 @@ module.exports = function(){
     router.post('/api/register',AuthController.registerApi);
 
     // PETS ROUTES
-    router.get('/adopta',PetsController.adopta);
-
     router.get('/pets',PetsController.index);
-    router.get('/pets/create',PetsController.create);
 
-    router.get('/pets/:id',PetsController.show);
-
+    router.get('/pets/show/:id',PetsController.show);
 
     router.post('/upload_img', PetsController.subirArchivo);
 
     router.post('/pets/store', PetsController.store);
-
-    router.get('/pets/update',PetsController.update);
+    router.put('/pets/update', PetsController.updatePet);
+    router.post('/pets/delete', PetsController.deletePet);
+    router.get('/pets/user/:id_user',PetsController.getPetsByUser);
+    router.get('/pets/adoptions_available',PetsController.adoptionsAvailable);
 
     //router.get('/donations',DonationsController.get);
     //router.post('/donations',DonationsController.create);
