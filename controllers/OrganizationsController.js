@@ -25,7 +25,8 @@ exports.store = async (req,res,next) => {
       cover,
       photo,
       description,
-      user_id: 1
+      user_id: 1,
+      status: (status || 1)
     });
 
     if(!organizaciones) return next();

@@ -14,6 +14,7 @@ const ReservationsController = require('../controllers/ReservationsController');
 const VetsController = require('../controllers/VetsController');
 const ProductsController = require('../controllers/ProductsController');
 const ServicesController = require('../controllers/ServicesController');
+const IsolationsController = require('../controllers/IsolationsController');
 
 const auth = require('../middleware/Auth');
 
@@ -45,6 +46,7 @@ module.exports = function(){
     router.get('/pets',PetsController.index);
 
     router.get('/pets/show/:id',PetsController.show);
+    router.post('/pets/search',PetsController.searchPets);
 
     router.post('/upload_img', PetsController.subirArchivo);
 
@@ -79,6 +81,12 @@ module.exports = function(){
     router.put('/update_vet', VetsController.updateVet);
     router.post('/create_vet', VetsController.createVet);
 
+    // Isolations
+    router.post('/create_isolation', IsolationsController.createIsolation);
+    router.get('/get_isolations/:idVet', IsolationsController.getIsolations);
+    router.put('/update_isolation', IsolationsController.updateIsolation);
+    router.post('/delete_isolation', IsolationsController.deleteIsolation);
+    
     // Products
     router.get('/get_products/:idVet', ProductsController.getProducts);
     router.put('/update_product', ProductsController.updateProduct);
@@ -90,9 +98,10 @@ module.exports = function(){
     router.post('/create_service', ServicesController.createService);
     
     // Vaccines
-    router.get('/vaccines/:petId', VaccinesController.show);
-    router.post('/vaccines', VaccinesController.add);
-    router.put('/vaccines/:id',VaccinesController.update);
+    router.post('/create_vaccine', VaccinesController.createVaccine);
+    router.get('/get_vaccines/:idPet', VaccinesController.getVaccines);
+    router.put('/update_vaccine', VaccinesController.updateVaccine);
+    router.post('/delete_vaccine', VaccinesController.deleteVaccine);
 
     // adoptions
     router.post('/adoptions', AdoptionsController.add);

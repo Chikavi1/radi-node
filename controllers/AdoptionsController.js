@@ -36,6 +36,7 @@ exports.add = (req,res) => {
       userId,
       petId,
       estatus,
+      status: (status || 1)
     })
 
     if(!adoptions) return next();
@@ -56,7 +57,8 @@ exports.update = (req,res) => {
 exports.show = async (req,res) => {
     const adoptions = await Adoptions.findAll({
         where: {
-            userId: req.params.userId
+            userId: req.params.userId,
+            "status": {[Op.ne]: 0}
         }
     });
     res.json(adoptions);

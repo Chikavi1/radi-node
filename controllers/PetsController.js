@@ -85,7 +85,7 @@ exports.updatePet = async (req, res) => {
 
 exports.adoptionsAvailable = async (req, res) => {
 
-  await Pets(DB, DataTypes).findAll({where: {"status": 2}})
+  await Pets(DB, DataTypes).findAll({where: {"status": 2, "status": {[Op.ne]: 0}}})
     .then(data => {
         res.status(200);
         res.json(data);
@@ -106,6 +106,26 @@ exports.getPetsByUser = async (req, res) => {
         res.status(503);
         res.send(err);
     })
+
+}
+
+exports.searchPets = async (req, res) => {
+
+  let result = await Pets(DB, DataTypes).findAll({
+    where: {
+      "name": {[Op.like]: '%' + req.body.pet_name + '%'},
+      "status": { [Op.ne]: 0 }
+    }
+  })
+
+  if (result.length) {
+    res.status(200);
+    res.json(result);
+  } else {
+    res.status(503);
+    res.json({msg: 'nada'});
+  }
+
 
 }
 
@@ -158,7 +178,8 @@ exports.store = async (req,res,next) => {
       verified: 0,
       specie,
       code: 'aasdasdasahusada2',
-      geolocation
+      geolocation,
+      status: (status || 1)
     }).then(() => {
       res.status(200);
       res.send('OK');
@@ -198,7 +219,7 @@ exports.show = async (req,res) => {
   const { id } = req.params;
 
   const pets = await Pets(DB, DataTypes).findOne({
-    where: { id }
+    where: { id, "status": {[Op.ne]: 0} }
   });
 
   pets.photo = "http://localhost:8080/"+pets.photo;
