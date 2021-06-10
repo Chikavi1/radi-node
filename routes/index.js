@@ -76,6 +76,7 @@ module.exports = function(){
     router.get('/reservations_week/:idVet', ReservationsController.getReservationsWeek);
     router.post('/create_reservation', ReservationsController.insertReservation);
     router.get('/get_reservations_user/:idUser', ReservationsController.getReservationsByUser);
+    router.get('/retrieve_payments', ReservationsController.retrievePayment);
 
     // Vets
     router.get('/get_vet/:idVet', VetsController.getVet);
