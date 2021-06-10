@@ -33,6 +33,26 @@ module.exports.getVets = async (req, res) => {
 
 }
 
+exports.searchVets = async (req, res) => {
+
+    let result = await Vets(DB, DataTypes).findAll({
+      where: {
+        "name": {[Op.like]: '%' + req.params.vet_name + '%'},
+        "status": { [Op.ne]: 0 }
+      }
+    })
+  
+    if (result.length) {
+      res.status(200);
+      res.json(result);
+    } else {
+      res.status(503);
+      res.json({msg: 'nada'});
+    }
+  
+  
+  }
+
 module.exports.nearVets = async (req, res) => {
 
     try {
@@ -73,7 +93,7 @@ module.exports.updateVet = async (req, res) => {
 
 module.exports.createVet = async (req, res) => {
 
-    const { name, profile, phone, description, services, latitude, longitude } = req.body;
+    const { name, profile, phone, description, services, latitude, longitude, status } = req.body;
 
     await Vets(DB, DataTypes).create({
         name,

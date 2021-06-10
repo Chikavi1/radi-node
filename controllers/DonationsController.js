@@ -54,7 +54,7 @@ exports.get = async (req,res,next) => {
 
 exports.create = async (req,res,next) => {
 
-    const { headline,amount,message } = req.body;
+    const { headline,amount,message,status } = req.body;
 
     console.log(headline,amount,message);
 

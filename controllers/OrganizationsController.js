@@ -13,7 +13,7 @@ exports.index = async (req,res) => {
 exports.store = async (req,res,next) => {
 
 
-    const { name,address,social_media,cellphone,cover,photo,description,user_id } = req.body;
+    const { name,address,social_media,cellphone,cover,photo,description,user_id,status } = req.body;
 
     console.log(req.body);
 

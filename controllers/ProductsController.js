@@ -35,7 +35,7 @@ module.exports.updateProduct = async (req, res) => {
 
 module.exports.createProduct = async (req, res) => {
 
-    const { title, description, price, category, amount, available, img, id_vet } = req.body;
+    const { title, description, price, category, amount, available, img, id_vet, status } = req.body;
 
     await Products(DB, DataTypes).create({title, description, price, category, amount, available, img, id_vet, status: (status || 1) })
     .then(() => {

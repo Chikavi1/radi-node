@@ -17,7 +17,7 @@ exports.add = (req,res) => {
         state,
         userId,
         petId,
-        estatus
+        status
     } = req.body;
 
 

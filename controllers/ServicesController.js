@@ -35,7 +35,7 @@ module.exports.updateService = async (req, res) => {
 
 module.exports.createService = async (req, res) => {
 
-    const { title, description, price, available, img, id_vet } = req.body;
+    const { title, description, price, available, img, id_vet, status } = req.body;
 
     await Services(DB, DataTypes).create({ title, description, price, available, img, id_vet, status: (status || 1) })
         .then(() => {

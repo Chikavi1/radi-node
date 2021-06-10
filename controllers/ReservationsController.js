@@ -1,4 +1,5 @@
 //const { DataTypes } = require('sequelize/types');
+const { date } = require('faker');
 const moment = require('moment');
 const { Sequelize, DataTypes, where, Op } = require('sequelize');
 const Stripe = require('stripe');
@@ -7,6 +8,7 @@ const stripe = new Stripe('sk_test_yA1c9PFKtvAHmekF9apQQYlm00tWTyzmTI ');
 const DB = require('../config/db');
 const Pets = require('../models/Pets');
 const Reservations = require('../models/Reservations');
+const Users = require('../models/Users');
 
 module.exports.getReservationsWeek = async (req, res) => {
 
@@ -18,7 +20,7 @@ module.exports.getReservationsWeek = async (req, res) => {
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });
     Reservations(DB, DataTypes).belongsTo(Pets(DB, DataTypes), { foreignKey: 'id' })
 
-    let result = await Reservations(DB, DataTypes).findAll({ where: { "id_vet": req.params.idVet, "status": {[Op.ne]: 0}} });
+    let result = await Reservations(DB, DataTypes).findAll({ where: { "id_vet": req.params.idVet} });
 
     //let [result, meta] = await DB.query('select p.name, r.note, r.time, r.id_pet from reservations r inner join pets p on p.id=r.id_pet where r.id_vet=' + req.params.idVet);
 
@@ -36,8 +38,20 @@ module.exports.getReservationsWeek = async (req, res) => {
 
     })
 
-
     res.json(week);
+
+}
+
+exports.getReservationsByUser = async (req, res) => {
+    
+    await Reservations(DB, DataTypes).findAll({ where: { "id_user": req.params.idUser } })
+    .then((data) => {
+        res.status(200);
+        res.json(data);
+    }).catch((err) => {
+        res.status(503);
+        res.json(err);
+    });
 
 }
 
@@ -45,7 +59,7 @@ module.exports.insertReservation = async (req, res) => {
 
     let notAvailable = false;
     let payment_accepted = true;
-    const { payment_id, amount, name, note, payment, price, id_vet, id_pet, time, duration } = req.body;
+    const { payment_id, amount, name, note, payment, price, id_vet, id_user, id_pet, time, duration, status } = req.body;
 
     // Validacion Horario
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });
@@ -102,6 +116,7 @@ module.exports.insertReservation = async (req, res) => {
             price,
             id_vet,
             id_pet,
+            id_user,
             time,
             duration,
             status: (status || 1)
