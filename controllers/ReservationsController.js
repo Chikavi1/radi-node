@@ -35,9 +35,14 @@ module.exports.getReservationsWeek = async (req, res) => {
         }
 
     })
-
-
     res.json(week);
+
+}
+
+module.exports.retrievePayment = async (req, res) =>{
+    const generate = await stripe.paymentIntents.retrieve('pi_1J0UIbCLbb37u5arL0TBQfuF');
+    return res.json(generate);
+
 
 }
 
@@ -65,19 +70,45 @@ module.exports.insertReservation = async (req, res) => {
         return;
     }
 
-    /* Codigo
+    // Codigo
     try {
 
-        const payment = await stripe.paymentIntents.create({
-            amount,
-            currency: "MXN",
-            description: 'Donacion a radi',
-            payment_method: payment_id,
-            confirm: true,
-            application_fee_amount: 1000,
-            transfer_data: {
-                destination: 'acct_1IiBSHJl56kWzuPa',
+        const generate = await stripe.paymentMethods.create({
+            type: 'card',
+            card: {
+                number: 4242424242424242,
+                cvc: 424,
+                exp_month: 04,
+                exp_year: 2024,   
             }
+        });
+
+
+        const payment = await stripe.paymentIntents.create({
+            // amount,
+            // currency: "COP",
+            // // payment_method_data: ['card'],
+            // // payment_method_types: ['card'],
+            // description: 'Donacion a radi',
+            // // payment_method: payment_id,
+            // confirm: true,
+            // payment_method_data: {
+
+            //     card: {
+            //         token: 'tok_visa'
+            //     },
+            // }
+            
+            amount,
+            currency: "COP",
+            description: 'Donacion a radi',
+            payment_method: generate.id,
+            confirm: true,
+            
+            // application_fee_amount: 1000,
+            // transfer_data: {
+            //     destination: 'acct_1IiBSHJl56kWzuPa',
+            // }
 
         });
 
@@ -87,7 +118,7 @@ module.exports.insertReservation = async (req, res) => {
         console.log(error);
         payment_accepted = false;
         // return res.json({ message: error })
-    }*/
+    }
     // Codigo
 
 
