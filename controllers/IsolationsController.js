@@ -1,13 +1,13 @@
-const { Sequelize, DataTypes, Op } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 
 const DB = require('../config/db');
-const Vaccines = require('../models/Vaccines');
+const Isolations = require('../models/Isolations');
 
-exports.createVaccine = async (req, res) => {
+exports.createIsolation = async (req, res) => {
 
-    const { id_pet, name, type, status } = req.body;
+    const { time_end, time_start, id_vet, weekend, status } = req.body;
 
-    await Vaccines(DB, DataTypes).create({ id_pet, name, type, status: (status || 1) })
+    await Isolations(DB, DataTypes).create({ time_end, time_start, id_vet, weekend, status: (status || 1) })
     .then(() => {
         res.status(200);
         res.json('OK');
@@ -18,9 +18,9 @@ exports.createVaccine = async (req, res) => {
 
 };
 
-exports.getVaccines = async (req, res) => {
+module.exports.getIsolations = async (req, res) => {
 
-    await Vaccines(DB, DataTypes).findAll({where: {"id_pet": req.params.idPet, "status": {[Op.ne]: 0}}})
+    await Isolations(DB, DataTypes).findAll({where: {"id_vet": req.params.idVet, "status": {[Op.ne]: 0}}})
     .then(data => {
         res.status(200);
         res.json(data);
@@ -31,12 +31,12 @@ exports.getVaccines = async (req, res) => {
 
 };
 
-exports.updateVaccine = async (req, res) => {
+module.exports.updateIsolation = async (req, res) => {
 
-    const updateVaccine = req.body;
+    const updateIsolation = req.body;
 
-    await Vaccines(DB, DataTypes).update(
-        updateVaccine,
+    await Isolations(DB, DataTypes).update(
+        updateIsolation,
         { where: { "id": req.body.id, "status": {[Op.ne]: 0}} })
         .then(data => {
             res.status(200);
@@ -48,9 +48,9 @@ exports.updateVaccine = async (req, res) => {
 
 }
 
-exports.deleteVaccine = async (req, res) => {
+module.exports.deleteIsolation = async (req, res) => {
 
-    await Vaccines(DB, DataTypes).update(
+    await Isolations(DB, DataTypes).update(
         {status: 0},
         { where: { "id": req.body.id } })
         .then(data => {

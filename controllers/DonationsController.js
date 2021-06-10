@@ -8,7 +8,8 @@ exports.donacion = async (req,res) => {
         order: [
             ['id', 'DESC'],
         ],
-        limit:5
+        limit:5,
+        where: {"status": {[Op.ne]: 0}}
         
     });
 
@@ -53,12 +54,12 @@ exports.get = async (req,res,next) => {
 
 exports.create = async (req,res,next) => {
 
-    const { headline,amount,message } = req.body;
+    const { headline,amount,message,status } = req.body;
 
     console.log(headline,amount,message);
 
     const donation =  await Donations.create({
-        headline,amount,message
+        headline,amount,message,status: (status || 1)
     });
 
     if(!donation) return next();
