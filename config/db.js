@@ -1,6 +1,6 @@
 const {Sequelize, DataTypes} = require('sequelize');
 
-module.exports = new Sequelize('radi','root','12345',{
+module.exports = new Sequelize('radi','chikavi','Elradipet10Lt#',{
     host: 'localhost',
     dialect: 'mysql',
     port: 3306,

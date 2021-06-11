@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "12345",
+    "username": "chikavi",
+    "password": "Elradipet10Lt#",
     "database": "radi",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
