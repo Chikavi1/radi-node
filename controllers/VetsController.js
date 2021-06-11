@@ -1,6 +1,6 @@
 //const { DataTypes } = require('sequelize/types');
 const moment = require('moment');
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Vets = require('../models/Vets');
