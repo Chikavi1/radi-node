@@ -52,6 +52,7 @@ module.exports.retrievePayment = async (req, res) =>{
 
 exports.getReservationsByUser = async (req, res) => {
     
+    console.log(moment());
     await Reservations(DB, DataTypes).findAll({ where: { "id_user": req.params.idUser } })
     .then((data) => {
         res.status(200);
