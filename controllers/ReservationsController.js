@@ -9,6 +9,8 @@ const DB = require('../config/db');
 const Pets = require('../models/Pets');
 const Reservations = require('../models/Reservations');
 const Users = require('../models/Users');
+const enviarEmail = require('../handlers/email');
+const axios = require('axios');
 
 module.exports.getReservationsWeek = async (req, res) => {
 
@@ -100,23 +102,9 @@ module.exports.insertReservation = async (req, res) => {
 
 
         const payment = await stripe.paymentIntents.create({
-            // amount,
-            // currency: "COP",
-            // // payment_method_data: ['card'],
-            // // payment_method_types: ['card'],
-            // description: 'Donacion a radi',
-            // // payment_method: payment_id,
-            // confirm: true,
-            // payment_method_data: {
-
-            //     card: {
-            //         token: 'tok_visa'
-            //     },
-            // }
-            
             amount,
             currency: "COP",
-            description: 'Donacion a radi',
+            description: 'Compra en Radi',
             payment_method: generate.id,
             confirm: true,
             
@@ -127,7 +115,41 @@ module.exports.insertReservation = async (req, res) => {
 
         });
 
-        console.log(payment);
+        console.log(payment.status);
+
+        if(payment.status === 'succeeded'){
+
+
+            // envia notificacion a veterinario
+
+            axios.post('https://onesignal.com/api/v1/notifications', {
+                app_id: 'e15689c2-569b-482f-9364-a8fca5641826',
+                data: { "userId" : "Postman-1234" },
+                contents: { en: "English message from Postman", es: "Reservación para el viernes 30 de abril de 2021 de 8:00 am a 9:00 am" },
+                headings: { en: "English Title", es: "Reservacion en Radi🐶" },
+                include_player_ids: ["75f57802-eebf-49ec-a9b6-911a07f1edb2"]
+            })
+            .then(function (response) {
+                console.log('jejejej');
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+            const resetUrl = `http://localhost:3000/reestablecer/112asdasddas`;
+            const usuario  = 'chikavi';
+    
+            await enviarEmail.enviar({
+                usuario,
+                subject: 'Reestablecer contraseña',
+                resetUrl,
+                archivo: 'reservacion'
+            });
+        
+            res.json({ mensaje:'Se ha enviado el correo' });
+        
+        }
 
     } catch (error) {
         console.log(error);
@@ -137,7 +159,9 @@ module.exports.insertReservation = async (req, res) => {
     // Codigo
 
 
-    if (!payment_accepted) { // Pago NO aceptado
+    if (!payment_accepted) 
+    { 
+        // Pago NO aceptado
         res.status(503);
         res.json('Pago no aceptado');
     } else {
@@ -152,13 +176,13 @@ module.exports.insertReservation = async (req, res) => {
             time,
             duration,
             status: (status || 1)
-        }).then(() => {
-            res.status(200);
-            res.json('OK');
-        }).catch((err) => {
-            res.status(503);
-            res.json(err);
-        });
+            }).then(() => {
+                res.status(200);
+                res.json('OK');
+            }).catch((err) => {
+                res.status(503);
+                res.json(err);
+            });
     }
 
 }

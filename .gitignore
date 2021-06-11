@@ -2,3 +2,5 @@ node_modules/
 todo.txt
 uploads/
 config/db.js
+config/*
+package-lock.json
