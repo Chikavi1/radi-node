@@ -1,38 +1,7 @@
-TODO
+TODO 04/06/2021
 
--> Reservaciones
-    - ID Cliente : string
-    - Fecha : timestamp
-    - ID Veterinaria : string
-    - Nombre : string
-    - Nota : string
-    - Metodo de pago : 0 efectivo 1 debito 2 credito
-    - Precio : number
-    - ID Mascota : string
+Reservaciones por usuario
+Deletes de todo
+Buscador
+Agregar id_user a productos
 
-<- Reservaciones
-    - Array : timestamp
-
--> Isolaciones
-    - Tiempo inicio : timestamp
-    - Tiempo final : timestamp
-    - ID Veterinaria : string
-    - Domingo : bool
-
-- Servcios
-    - Titulo
-    - Descricpción
-    - Precio
-    - Disponible
-    - Imagen
-
-- Productos
-    - Titulo
-    - Descricpción
-    - Precio
-    - Categoría
-    - Existencia
-    - Disponible
-    - Imagen
-
-(Imagen BASE 64)
