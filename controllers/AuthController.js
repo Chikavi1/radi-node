@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-// const enviarEmail = require('../handlers/email');
+const enviarEmail = require('../handlers/email');
 
 
 exports.login = (req,res) => {
