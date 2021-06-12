@@ -16,12 +16,15 @@ const ProductsController = require('../controllers/ProductsController');
 const ServicesController = require('../controllers/ServicesController');
 const IsolationsController = require('../controllers/IsolationsController');
 const ReviewsController = require('../controllers/ReviewsController');
+const PublicController = require('../controllers/PublicControllers');
 
 const auth = require('../middleware/Auth');
 
 module.exports = function(){
     router.get('/',HomeController.landingPage);
     router.get('/about',HomeController.about);
+
+    router.get('/search_things/:query', PublicController.searchThings);
 
     // AUTH ROUTES NODEJS
     router.get('/login',AuthController.login);
@@ -69,8 +72,10 @@ module.exports = function(){
     router.get('/auth/google/callback',AuthController.googleCallback);
 
     // Organizations
-    router.get('/organizaciones',OrganizationsController.index);
-    router.post('/organizaciones',OrganizationsController.store);
+    router.get('/get_organization/:idOrg',OrganizationsController.getOrganization);
+    router.post('/create_organization',OrganizationsController.createOrganization);
+    router.put('/update_organization',OrganizationsController.updateOrganization);
+    router.post('/delete_organization',OrganizationsController.deleteOrganization);
 
     // Reservations
     router.get('/reservations_week/:idVet', ReservationsController.getReservationsWeek);

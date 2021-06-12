@@ -1,11 +1,7 @@
-const Pets = require('../models/Pets');
-// const pool = require('../database');
-const { Op, json } = require("sequelize");
-
-
-const { Sequelize, DataTypes, where } = require('sequelize');
+const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
+const Pets = require('../models/Pets');
 
 
 const shortid = require('shortid');
