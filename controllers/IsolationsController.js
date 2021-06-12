@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
@@ -5,16 +6,28 @@ const Isolations = require('../models/Isolations');
 
 exports.createIsolation = async (req, res) => {
 
-    const { time_end, time_start, id_vet, weekend, status } = req.body;
+    const { time_end, time_start, id_vet, status } = req.body;
 
-    await Isolations(DB, DataTypes).create({ time_end, time_start, id_vet, weekend, status: (status || 1) })
-    .then(() => {
-        res.status(200);
-        res.json('OK');
-    }).catch((err) => {
+    if (!time_end && !time_start && !id_vet) {
         res.status(503);
         res.json(err);
-    });
+        return;
+    }
+
+    if (!moment(time_start).isBefore(time_end)) {
+        res.status(503);
+        res.json(err);
+        return;
+    }
+
+    /* await Isolations(DB, DataTypes).create({ time_end, time_start, id_vet, status: (status || 1) })
+        .then(() => {
+            res.status(200);
+            res.json('OK');
+        }).catch((err) => {
+            res.status(503);
+            res.json(err);
+        }); */
 
 };
 
