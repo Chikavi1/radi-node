@@ -57,7 +57,7 @@ module.exports = function(){
     router.post('/pets/store', PetsController.store);
     router.put('/pets/update', PetsController.updatePet);
     router.post('/pets/delete', PetsController.deletePet);
-    router.get('/near_pets/:lat/:long/:status', PetsController.nearPets);
+    router.get('/near_pets/:lat/:long', PetsController.nearPets);
     router.get('/pets/user/:id_user',PetsController.getPetsByUser);
     router.get('/pets/adoptions_available',PetsController.adoptionsAvailable);
 
@@ -73,6 +73,8 @@ module.exports = function(){
 
     // Organizations
     router.get('/get_organization/:idOrg',OrganizationsController.getOrganization);
+    router.get('/get_organizations',OrganizationsController.getAllOrganizations);
+    router.get('/near_organizations/:lat/:long',OrganizationsController.nearOrganizations);
     router.post('/create_organization',OrganizationsController.createOrganization);
     router.put('/update_organization',OrganizationsController.updateOrganization);
     router.post('/delete_organization',OrganizationsController.deleteOrganization);
@@ -88,6 +90,7 @@ module.exports = function(){
     router.get('/get_vets/:offset/:limit', VetsController.getVets);
     router.get('/near_vets/:lat/:long', VetsController.nearVets);
     router.get('/search_vets/:vet_name', VetsController.searchVets);
+    router.get('/search_vets_services/:idVet/:service', VetsController.searchVetsServices);
     router.put('/update_vet', VetsController.updateVet);
     router.post('/create_vet', VetsController.createVet);
 

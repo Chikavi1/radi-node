@@ -100,7 +100,7 @@ module.exports.nearPets = async (req, res) => {
           SELECT *, ((ACOS(SIN(${req.params.lat} * PI() / 180) * 
           SIN(latitude * PI() / 180) + COS(${req.params.lat} * PI() / 180) * 
           COS(latitude * PI() / 180) * COS((${req.params.long} - longitude) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1.609344) 
-          as distance FROM Pets WHERE status!=${req.params.status} HAVING distance <= 5 ORDER BY distance ASC;
+          as distance FROM Pets WHERE status!=0 HAVING distance <= 5 ORDER BY distance ASC;
           `);
 
       res.status(200);
