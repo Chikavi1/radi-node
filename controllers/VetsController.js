@@ -4,10 +4,11 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Vets = require('../models/Vets');
+const Services = require('../models/Services');
 
 module.exports.getVet = async (req, res) => {
 
-    await Vets(DB, DataTypes).findOne({ where: { id: req.params.idVet, "status": {[Op.ne]: 0}} })
+    await Vets(DB, DataTypes).findOne({ where: { id: req.params.idVet, "status": { [Op.ne]: 0 } } })
         .then(data => {
             res.status(200);
             res.json(data);
@@ -21,7 +22,7 @@ module.exports.getVet = async (req, res) => {
 module.exports.getVets = async (req, res) => {
 
     await Vets(DB, DataTypes).findAll({
-        where: {"status": {[Op.ne]: 0}},
+        where: { "status": { [Op.ne]: 0 } },
         offset: parseInt(req.params.offset) || 1, limit: parseInt(req.params.limit) || 1
     }).then(data => {
         res.status(200);
@@ -36,22 +37,43 @@ module.exports.getVets = async (req, res) => {
 exports.searchVets = async (req, res) => {
 
     let result = await Vets(DB, DataTypes).findAll({
-      where: {
-        "name": {[Op.like]: '%' + req.params.vet_name + '%'},
-        "status": { [Op.ne]: 0 }
-      }
+        where: {
+            "name": { [Op.like]: '%' + req.params.vet_name + '%' },
+            "status": { [Op.ne]: 0 }
+        }
     })
-  
+
     if (result.length) {
-      res.status(200);
-      res.json(result);
+        res.status(200);
+        res.json(result);
     } else {
-      res.status(503);
-      res.json({msg: 'nada'});
+        res.status(503);
+        res.json({ msg: 'nada' });
     }
-  
-  
-  }
+
+
+}
+
+exports.searchVetsServices = async (req, res) => {
+
+    let result = await Services(DB, DataTypes).findAll({
+        where: {
+            "id_vet": req.params.idVet,
+            "title": { [Op.like]: '%' + req.params.service + '%' },
+            "status": { [Op.ne]: 0 }
+        }
+    })
+
+    if (result.length) {
+        res.status(200);
+        res.json(result);
+    } else {
+        res.status(503);
+        res.json({ msg: 'nada' });
+    }
+
+
+}
 
 module.exports.nearVets = async (req, res) => {
 
@@ -80,7 +102,7 @@ module.exports.updateVet = async (req, res) => {
 
     await Vets(DB, DataTypes).update(
         updatedVet,
-        { where: { "id": req.body.id, "status": {[Op.ne]: 0}} })
+        { where: { "id": req.body.id, "status": { [Op.ne]: 0 } } })
         .then(data => {
             res.status(200);
             res.json(data);

@@ -29,7 +29,6 @@ exports.createIsolation = async (req, res) => {
         }
     });
 
-    console.log(result);
     if (!result.length) {
         res.status(503);
         res.json('Horario no disponible');
