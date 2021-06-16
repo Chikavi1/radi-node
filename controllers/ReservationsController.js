@@ -1,6 +1,7 @@
 //const { DataTypes } = require('sequelize/types');
 const { date } = require('faker');
-const moment = require('moment');
+const Moment = require('moment');
+const MomentRange = require('moment-range');
 const { Sequelize, DataTypes, where, Op } = require('sequelize');
 const Stripe = require('stripe');
 const stripe = new Stripe('sk_test_yA1c9PFKtvAHmekF9apQQYlm00tWTyzmTI ');
@@ -9,6 +10,9 @@ const DB = require('../config/db');
 const Pets = require('../models/Pets');
 const Reservations = require('../models/Reservations');
 const Users = require('../models/Users');
+const Vets = require('../models/Vets');
+
+const moment = MomentRange.extendMoment(Moment);
 
 module.exports.getReservationsWeek = async (req, res) => {
 
@@ -56,6 +60,53 @@ exports.getReservationsByUser = async (req, res) => {
 
 }
 
+exports.preReservation = async (req, res) => {
+    
+    let schedule, dayStart, dayEnd;
+    let day = req.body.day;
+    
+    await Vets(DB, DataTypes).findOne({where: {id: req.body.idVet}, attributes: ['schedule']})
+    .then(async (data) => {
+        
+        schedule = JSON.parse(data.schedule);
+        
+        let result = await Reservations(DB, DataTypes).findAll({
+            attributes: ['time'],
+            where: {
+                "id_vet":  req.body.idVet,
+                "status" : 1,
+            }
+        });
+        
+        dayStart = moment(day).startOf('day').hour( schedule[moment(day).day()].start );
+        dayEnd = moment(day).startOf('day').hour( schedule[moment(day).day()].end );
+        
+        const slots = moment.range(dayStart, dayEnd);
+        let time_slots = Array.from(slots.by('hours', {step: 1}))
+
+        console.log(result[0].dataValues.time);
+        if (result.length) {
+            let i = 0
+            time_slots = time_slots.filter(m => {
+                for (; i < result.length; i++) {
+                    console.log(moment(m), moment(result[i].dataValues.time));
+                    return !moment(m).isSame(moment(result[i].dataValues.time));
+                }
+            });
+        }
+
+        time_slots = time_slots.map(m => moment(m).format());
+
+        res.status(200);
+        res.json(time_slots);
+    })
+    .catch(err => {
+        res.status(503);
+        res.json(err);
+    });
+
+}
+
 module.exports.insertReservation = async (req, res) => {
 
     let notAvailable = false;
@@ -68,7 +119,7 @@ module.exports.insertReservation = async (req, res) => {
     let result = await Reservations(DB, DataTypes).findAll({
         where: {
             "id_vet": id_vet,
-            "time" : {[Op.between] : [moment(time) , moment(time).add(duration, 'm')]}
+            "time" : {[Op.between] : [moment(time) , moment(time).add(duration || 60, 'm')]}
         }
     });
 
@@ -119,7 +170,7 @@ module.exports.insertReservation = async (req, res) => {
             id_pet,
             id_user,
             time,
-            duration,
+            duration: duration || 60,
             status: (status || 1)
         }).then(() => {
             res.status(200);

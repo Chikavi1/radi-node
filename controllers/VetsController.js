@@ -115,7 +115,7 @@ module.exports.updateVet = async (req, res) => {
 
 module.exports.createVet = async (req, res) => {
 
-    const { name, profile, phone, description, services, latitude, longitude, status } = req.body;
+    const { name, profile, phone, description, services, latitude, longitude, schedule, weekend, status } = req.body;
 
     await Vets(DB, DataTypes).create({
         name,
@@ -125,6 +125,8 @@ module.exports.createVet = async (req, res) => {
         latitude,
         longitude,
         profile,
+        weekend,
+        schedule,
         status: (status || 1)
     }).then(() => {
         res.status(200);

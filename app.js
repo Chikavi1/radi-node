@@ -6,10 +6,12 @@ const routes = require('./routes');
 const socketIO = require('socket.io');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
+const auth = require('./middleware/Auth');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const passport = require('./config/passport');
+
 // const Donations = require('./models/Donations');
 // const expressValidator = require('express-validator');
 
@@ -67,7 +69,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Rutas
-app.use('/',routes());
+app.use('/', routes());
 
 // Arranque del servidor
 const server = app.listen(port,host,() => {
