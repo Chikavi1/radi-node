@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 const Sequelize = require('sequelize');
+const db = require('../config/db');
 const Op = Sequelize.Op;
 
 const enviarEmail = require('../handlers/email');
@@ -38,29 +39,6 @@ exports.register = (req,res)=>{
         nombrePagina: 'Registrate',
     });
 }
-
-exports.createUser = async (req,res) => {
-    const {email,password,name} = req.body;
-
-    console.log(req.body);
-
-    try{
-        await Usuarios.create({
-            email,
-            password,
-            name
-        });
-
-        res.redirect('/login');
-    }catch(error){
-        req.flash('error', error.errors.map(error => error.message) );
-        res.render('login',
-        {
-            nombrePagina: 'ingresa con tu correo'
-        });
-    }
-}
-
 
 exports.forgot = (req,res)=>{
     res.render('login',{
@@ -98,13 +76,12 @@ exports.loginApi = async(req,res,next) => {
 
 
   const  { email,password } = req.body;
-  const usuario = await Usuarios.findOne({ where: { email  }});
-  console.log(usuario);
+  const usuario = await Usuarios(db, Sequelize.DataTypes).findOne({ where: { email  }});
   if(!usuario){
     await res.status(401).json({ mensaje : 'Usuario no existe.' });
     next();
   }else{
-    if(!bcrypt.compareSync(password, usuario.password )){
+    if(!bcrypt.compareSync(password, usuario.password)){
         await res.status(401).json({ mensaje : 'Contraseña incorrecta.' });
         next();
     }else{
@@ -129,20 +106,20 @@ exports.loginApi = async(req,res,next) => {
 exports.registerApi = async(req,res,next) => {
 
     let { name,email,password } = req.body;
-    const usuario = await Usuarios.findOne({ where: { email  } });   
-    if(usuario){
-        await res.status(401).json({ mensaje : 'Ese usuario ya existe' });
+    const usuario = await Usuarios(db, Sequelize.DataTypes).findOne({ where: { email  } });   
+    if (usuario) {
+        res.status(401).json({ mensaje: 'Ese usuario ya existe' });
         next();
-    }
-    try{
-            await Usuarios.create({ name,email,password });
-            res.json({ mensaje:'Usuario Creado'} );
-        }catch(error){
+    } else {
+        try {
+            await Usuarios(db, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8) });
+            res.json({ mensaje: 'Usuario Creado' });
+        } catch (error) {
             console.log(error);
-            res.json({ mensaje: 'Hubo un error'} );
+            res.json({ mensaje: 'Hubo un error' });
         }
-    res.json({ mensaje:'Usuario Creado' });
-    
+    }
+
 }
 
 

@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     services: DataTypes.STRING,
     id_user: DataTypes.INTEGER,
     weekend: DataTypes.BOOLEAN,
+    schedule: DataTypes.STRING,
     status: DataTypes.INTEGER
   }, {
     sequelize,
