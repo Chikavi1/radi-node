@@ -84,13 +84,12 @@ exports.preReservation = async (req, res) => {
         const slots = moment.range(dayStart, dayEnd);
         let time_slots = Array.from(slots.by('hours', {step: 1}))
 
-        console.log(result[0].dataValues.time);
         if (result.length) {
             let i = 0
             time_slots = time_slots.filter(m => {
                 for (; i < result.length; i++) {
-                    console.log(moment(m), moment(result[i].dataValues.time));
-                    return !moment(m).isSame(moment(result[i].dataValues.time));
+                    console.log(moment.utc(m), moment.utc(result[i].dataValues.time).format('YYYY-MM-DD HH:mm:ss'));
+                    return !moment(m).isSame(moment.utc(result[i].dataValues.time).format('YYYY-MM-DD HH:mm:ss'));
                 }
             });
         }
