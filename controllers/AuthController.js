@@ -11,18 +11,18 @@ const Op = Sequelize.Op;
 const enviarEmail = require('../handlers/email');
 
 
-exports.login = (req,res) => {
-    res.render('login',{
-        nombrePagina: 'Ingresa',
-    });
-}
+// exports.login = (req,res) => {
+//     res.render('login',{
+//         nombrePagina: 'Ingresa',
+//     });
+// }
 
-exports.auth = passport.authenticate('local',{
-    successRedirect: '/adopta',
-    failureRedirect: '/login',
-    failureFlash: true,
-    badRequestMessage: 'Ambos campos son obligatorios.'
-});
+// exports.auth = passport.authenticate('local',{
+//     successRedirect: '/adopta',
+//     failureRedirect: '/login',
+//     failureFlash: true,
+//     badRequestMessage: 'Ambos campos son obligatorios.'
+// });
 
 exports.usuarioAutenticado = (req,res,next) => {
     // si el usuario esta autenticado, adelante
@@ -34,30 +34,12 @@ exports.usuarioAutenticado = (req,res,next) => {
     return res.redirect('/login');
 }
 
-exports.register = (req,res)=>{
-    res.render('register',{
-        nombrePagina: 'Registrate',
-    });
-}
-
-exports.forgot = (req,res)=>{
-    res.render('login',{
-        nombrePagina: 'Ingresa',
-    });
-}
-
-exports.cerrarSesion = (req,res) => {
-    req.session.destroy(() => {
-        res.redirect('/login');
-    })
-}
 
 
 
 
 exports.googleauth = passport.authenticate('google',{
     scope: ['profile', 'email'],
-   
 });
 
 exports.googleCallback = passport.authenticate('google', {
@@ -89,6 +71,7 @@ exports.loginApi = async(req,res,next) => {
             name: usuario.name,
             email: usuario.email,
             id: usuario.id,
+            customer: usuario.customer
 
         },
         'LLAVESECRETA',

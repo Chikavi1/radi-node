@@ -106,6 +106,132 @@ module.exports.deleteCard = async (req, res) => {
 
 
 
+//   const transfers = await stripe.transfers.list({
+//     limit: 3,
+//     destination: 'acct_1J26OpG9XI6hZAKx'
+// });
+
+//       const account = await stripe.balance.retrieve({
+//         stripeAccount: 'acct_1IiBSHJl56kWzuPa'
+// });
+
+        //   return res.json(transfers);
+
+
+
+    
+
+
+
+
+
+    // Crear cuenta de vets
+
+    // const account = await stripe.accounts.create({
+    //     type: 'custom',
+    //     country: 'mx',
+    //     email: 'chikavi99@gmail.com',
+    //     business_type: 'company',
+    //     company: {
+    //         name: "Veterinaria Chikavi"
+    //     },
+    //     capabilities: {
+    //         card_payments: {requested: true},
+    //         transfers: {requested: true},
+    //       },
+    //     settings: {
+    //         card_payments: {
+    //             statement_descriptor_prefix: "DESC ABRE"
+    //         },
+    //         payments: {
+    //             statement_descriptor: "DESCRIPCION DEL CARGO ",
+    //         }
+    //     }
+    //     });
+
+// obtener cuenta de vets
+
+
+        // const account = await stripe.accounts.del(
+        // 'acct_1J25sfBoVJhODbmL'
+        // );
+
+        // const account = await stripe.accountLinks.create({
+        //     account: 'acct_1J25sfBoVJhODbmL',
+        //     refresh_url: 'https://example.com/reauth',
+        //     return_url: 'https://example.com/return',
+        //     type: 'account_onboarding',
+        //   });
+
+// obtener saldo    
+        //   const account = await stripe.balance.retrieve({
+        //     stripeAccount: 'acct_1IiBSHJl56kWzuPa'
+        //   });
+
+        //   obtener eventos
+
+        // const account = await stripe.events.list({
+        //     limit: 3,
+        //     // account:'acct_1IiBSHJl56kWzuPa'
+        //   });
+
+        // eliminar cuenta
+
+
+
+// actualizar cuenta de vets
+//     const account = await stripe.accounts.update(
+//     'acct_1J25sfBoVJhODbmL',
+//     {
+//         business_profile: {
+//         url: 'https://api.radi.pet/',
+//         product_description: 'Veterinaria en tlaquepaque'
+//     },
+//     tos_acceptance: {
+//         date: Math.floor(Date.now() / 1000),
+//         ip: req.connection.remoteAddress, // Assumes you're not using a proxy
+//       },
+//     }
+//   );
+
+
+        // return res.json(account);
+
+
+
+    
+
+    //   console.log(source);
+
+      
+
+
+  
+
+
+
+
+
+        // HACER COBRO
+
+        //   const charge = await stripe.charges.create({
+        //     amount:   4600,
+        //     currency: 'mxn',
+        //     customer: costumer,
+        //     description: 'compra en radiss',
+        //     application_fee_amount: 1000,
+        //     transfer_data: {
+        //         destination: 'acct_1J26OpG9XI6hZAKx',
+        //     },
+        //     });
+        //     return res.json(charge);
+
+        // HACER COBRO
+
+
+
+    // const generate = await stripe.paymentIntents.retrieve('pi_1J0UIbCLbb37u5arL0TBQfuF');
+    // return res.json(generate);
 
 
 

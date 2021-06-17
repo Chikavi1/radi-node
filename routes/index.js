@@ -17,6 +17,9 @@ const ServicesController = require('../controllers/ServicesController');
 const IsolationsController = require('../controllers/IsolationsController');
 const ReviewsController = require('../controllers/ReviewsController');
 const PublicController = require('../controllers/PublicControllers');
+const StripeController = require('../controllers/StripeController');
+
+const auth = require('../middleware/Auth');
 
 module.exports = function(){
     router.get('/',HomeController.landingPage);
@@ -25,10 +28,6 @@ module.exports = function(){
     router.get('/search_things/:query', PublicController.searchThings);
 
     // AUTH ROUTES NODEJS
-    router.get('/login',AuthController.login);
-    router.post('/login',AuthController.auth);
-
-    router.get('/register',AuthController.register);
 
     router.get('/auth/google',AuthController.googleauth);
     router.get('/auth/google/callback',AuthController.googleCallback);
@@ -126,6 +125,20 @@ module.exports = function(){
     router.get('/adoptions_user/:userId',AdoptionsController.show);
     // router.get('/adoptions_pet/:userId')
 
+
+    // stripe connect
+    router.get('/createCostumer/:token/:email/:name',StripeController.createCostumer);
+    router.get('/getCostumer/:costumerid',StripeController.getCostumer);
+    router.get('/updateCostumer/:costumerid/:card',StripeController.updateCostumer);
+
+    router.get('/getCards/:costumerid',StripeController.getCards);
+    router.get('/getCard/:costumerid/:card',StripeController.getCard);
+    router.get('/addCard/:costumerid/:token',StripeController.addCard);
+    router.get('/deleteCard/:costumerid/:card',StripeController.deleteCard);
+
+
+    router.get('/getCharges/:accountid',StripeController.getCharges);
+    router.get('/getBalance/:accountid',StripeController.getBalance);
 
     return router;
 }

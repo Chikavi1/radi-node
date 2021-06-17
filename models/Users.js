@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     share_location: DataTypes.INTEGER,
     googleId: DataTypes.STRING,
     points: DataTypes.INTEGER,
-    status: DataTypes.INTEGER
+    status: DataTypes.INTEGER,
+    customer: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Users',
