@@ -8,9 +8,10 @@ const stripe = new Stripe('sk_test_yA1c9PFKtvAHmekF9apQQYlm00tWTyzmTI ');
 
 const DB = require('../config/db');
 const Pets = require('../models/Pets');
-const Reservations = require('../models/Reservations');
-const Users = require('../models/Users');
 const Vets = require('../models/Vets');
+const Users = require('../models/Users');
+const Reservations = require('../models/Reservations');
+const validateBody = require('../public/validateBody');
 
 const moment = MomentRange.extendMoment(Moment);
 
@@ -48,7 +49,6 @@ module.exports.getReservationsWeek = async (req, res) => {
 
 exports.getReservationsByUser = async (req, res) => {
     
-    console.log(moment());
     await Reservations(DB, DataTypes).findAll({ where: { "id_user": req.params.idUser } })
     .then((data) => {
         res.status(200);
@@ -78,23 +78,24 @@ exports.preReservation = async (req, res) => {
             }
         });
         
-        dayStart = moment(day).startOf('day').hour( schedule[moment(day).day()].start );
-        dayEnd = moment(day).startOf('day').hour( schedule[moment(day).day()].end );
+        dayStart = moment.utc(day).startOf('day').hour( schedule[moment(day).day()].start );
+        dayEnd = moment.utc(day).startOf('day').hour( schedule[moment(day).day()].end );
         
         const slots = moment.range(dayStart, dayEnd);
         let time_slots = Array.from(slots.by('hours', {step: 1}))
+        time_slots = time_slots.map(m => moment(m).format('YYYY-MM-DD HH:mm:ss'));
 
         if (result.length) {
-            let i = 0
+            
+            let flag = true;
             time_slots = time_slots.filter(m => {
-                for (; i < result.length; i++) {
-                    console.log(moment.utc(m), moment.utc(result[i].dataValues.time).format('YYYY-MM-DD HH:mm:ss'));
-                    return !moment(m).isSame(moment.utc(result[i].dataValues.time).format('YYYY-MM-DD HH:mm:ss'));
+                for (let i = 0; i < result.length; i++) {
+                    flag = m !== moment.utc(result[i].dataValues.time).format('YYYY-MM-DD HH:mm:ss');
+                    if (!flag) break;
                 }
+                return flag;
             });
         }
-
-        time_slots = time_slots.map(m => moment(m).format());
 
         res.status(200);
         res.json(time_slots);
@@ -112,13 +113,19 @@ module.exports.insertReservation = async (req, res) => {
     let payment_accepted = true;
     const { payment_id, amount, name, note, payment, price, id_vet, id_user, id_pet, time, duration, status } = req.body;
 
+    if (!validateBody(payment_id, amount, name, note, payment, price, id_vet, id_user, id_pet, time, duration, status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
+
     // Validacion Horario
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });
     Reservations(DB, DataTypes).belongsTo(Pets(DB, DataTypes), { foreignKey: 'id' })
     let result = await Reservations(DB, DataTypes).findAll({
         where: {
             "id_vet": id_vet,
-            "time" : {[Op.between] : [moment(time) , moment(time).add(duration || 60, 'm')]}
+            "time" : {[Op.between] : [moment.utc(time) , moment.utc(time).add(duration || 60, 'm')]}
         }
     });
 
@@ -156,6 +163,7 @@ module.exports.insertReservation = async (req, res) => {
     // Codigo
 
 
+    console.log(moment.utc(time).format('YYYY-MM-DD HH:mm:ss'))
     if (!payment_accepted) { // Pago NO aceptado
         res.status(503);
         res.json('Pago no aceptado');
@@ -168,7 +176,7 @@ module.exports.insertReservation = async (req, res) => {
             id_vet,
             id_pet,
             id_user,
-            time,
+            time: moment.utc(time),
             duration: duration || 60,
             status: (status || 1)
         }).then(() => {

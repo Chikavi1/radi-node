@@ -14,7 +14,7 @@ exports.createIsolation = async (req, res) => {
         return;
     }
 
-    if (!moment(time_start).isBefore(time_end)) {
+    if (!moment.utc(time_start).isBefore(moment.utc(time_end))) {
         res.status(503);
         res.json({ msg: 'Error en las fechas' });
         return;
@@ -23,8 +23,8 @@ exports.createIsolation = async (req, res) => {
     let result = await Isolations(DB, DataTypes).findAll({
         where: {
             [Op.or]: {
-                "time_start": moment(time_start),
-                "time_end": moment(time_end)
+                "time_start": moment.utc(time_start),
+                "time_end": moment.utc(time_end)
             }
         }
     });
@@ -35,7 +35,7 @@ exports.createIsolation = async (req, res) => {
         return;
     }
 
-    await Isolations(DB, DataTypes).create({ time_end, time_start, id_vet, status: (status || 1) })
+    await Isolations(DB, DataTypes).create({ time_end: moment.utc(time_end), time_start: moment.utc(time_start), id_vet, status: (status || 1) })
         .then(() => {
             res.status(200);
             res.json('OK');
