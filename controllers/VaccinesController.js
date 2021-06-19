@@ -2,10 +2,17 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Vaccines = require('../models/Vaccines');
+const validateBody = require('../public/validateBody');
 
 exports.createVaccine = async (req, res) => {
 
     const { id_pet, name, type, status } = req.body;
+    
+    if (!validateBody(id_pet, name, type, status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
 
     await Vaccines(DB, DataTypes).create({ id_pet, name, type, status: (status || 1) })
     .then(() => {

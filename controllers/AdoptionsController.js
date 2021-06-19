@@ -1,5 +1,5 @@
 const Adoptions = require('../models/Adoptions');
-
+const validateBody = require('../public/validateBody');
 
 exports.add = (req,res) => {
     const {  
@@ -20,6 +20,25 @@ exports.add = (req,res) => {
         status
     } = req.body;
 
+    if (!validateBody(
+        name,
+        email,
+        identification,
+        cellphone,
+        address,
+        exterior_number,
+        interior_number,
+        zip,
+        neighborhood,
+        city,
+        state,
+        userId,
+        petId,
+        status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
 
     const adoptions = Adoptions.create({
       name,

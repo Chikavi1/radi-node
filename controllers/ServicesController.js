@@ -2,6 +2,7 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Services = require('../models/Services');
+const validateBody = require('../public/validateBody');
 
 module.exports.getServices = async (req, res) => {
 
@@ -36,6 +37,12 @@ module.exports.updateService = async (req, res) => {
 module.exports.createService = async (req, res) => {
 
     const { title, description, price, available, img, id_vet, status } = req.body;
+
+    if (!validateBody(title, description, price, available, img, id_vet, status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
 
     await Services(DB, DataTypes).create({ title, description, price, available, img, id_vet, status: (status || 1) })
         .then(() => {

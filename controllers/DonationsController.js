@@ -1,5 +1,7 @@
-const Donations = require('../models/Donations');
 const sequelize = require('sequelize');
+const Donations = require('../models/Donations');
+
+const validateBody = require('../public/validateBody');
 
 exports.donacion = async (req,res) => {
 
@@ -56,7 +58,11 @@ exports.create = async (req,res,next) => {
 
     const { headline,amount,message,status } = req.body;
 
-    console.log(headline,amount,message);
+    if (!validateBody(headline,amount,message,status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
 
     const donation =  await Donations.create({
         headline,amount,message,status: (status || 1)

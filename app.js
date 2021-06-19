@@ -1,5 +1,6 @@
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
 // const db = require('./config/db');
 const express = require('express');
 const routes = require('./routes');
@@ -30,7 +31,8 @@ module.exports = {
 // Servidor Express --------------------------------------|
 const app = express();
 
-app.use(cors())
+app.use(cors());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

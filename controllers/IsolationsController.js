@@ -3,14 +3,15 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Isolations = require('../models/Isolations');
+const validateBody = require('../public/validateBody');
 
 exports.createIsolation = async (req, res) => {
 
     const { time_end, time_start, id_vet, status } = req.body;
 
-    if (!time_end && !time_start && !id_vet) {
+    if (!validateBody(time_end, time_start, id_vet, status)) {
         res.status(503);
-        res.json({ msg: 'Valores incompletos' });
+        res.json({msg: 'Datos incompletos'});
         return;
     }
 
