@@ -80,6 +80,8 @@ module.exports = function(){
     router.post('/create_reservation', ReservationsController.insertReservation);
     router.post('/prereservation', ReservationsController.preReservation);
     router.get('/get_reservations_user/:idUser', ReservationsController.getReservationsByUser);
+    router.put('/update_reservations', ReservationsController.updateVet);
+
     router.get('/retrieve_payments', ReservationsController.retrievePayment);
 
     // Vets
