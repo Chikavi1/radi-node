@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     code: DataTypes.STRING,
     geolocation: DataTypes.STRING,
     status: DataTypes.INTEGER,
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    age: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Pets',

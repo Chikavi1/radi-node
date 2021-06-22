@@ -120,8 +120,8 @@ exports.registerApi = async (req, res, next) => {
         next();
     } else {
         try {
-            await Usuarios(db, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8) });
-            res.json({ mensaje: 'Usuario Creado' });
+            let user = await Usuarios(db, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8) });
+            res.json({ mensaje: 'Usuario Creado', id:user.id });
         } catch (error) {
             console.log(error);
             res.json({ mensaje: 'Hubo un error' });
