@@ -2,6 +2,7 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Organizations = require('../models/Organizations');
+const validateBody = require('../public/validateBody');
 
 exports.createOrganization = async (req, res) => {
 
@@ -16,6 +17,22 @@ exports.createOrganization = async (req, res) => {
     id_user,
     status
   } = req.body;
+
+  if (!validateBody(
+    name,
+    address,
+    social_media,
+    cellphone,
+    cover,
+    photo,
+    description,
+    id_user,
+    status
+  )) {
+    res.status(503);
+    res.json({ msg: 'Datos incompletos' });
+    return;
+  }
 
   await Organizations(DB, DataTypes).create({
     name,

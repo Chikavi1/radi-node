@@ -2,10 +2,17 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Reviews = require('../models/Reviews');
+const validateBody = require('../public/validateBody');
 
 exports.createReview = async (req, res) => {
 
     const { id_vet, id_user, score, comment, date, status } = req.body;
+
+    if (!validateBody(id_vet, id_user, score, comment, date, status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
 
     await Reviews(DB, DataTypes).create({ id_vet, id_user, score, comment, date, status: (status || 1) })
     .then(() => {

@@ -18,10 +18,10 @@ const moment = MomentRange.extendMoment(Moment);
 
 module.exports.getReservationsWeek = async (req, res) => {
 
-    let week = [null, null, null, null, null, null, null];
+    let week = new Array(7);
     let currentDate = moment();
-    let weekStart = currentDate.clone().startOf('week');
-    let weekEnd = currentDate.clone().endOf('week');
+    let weekStart = currentDate.clone().startOf('isoweek');
+    let weekEnd = currentDate.clone().endOf('isoweek');
 
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });
     Reservations(DB, DataTypes).belongsTo(Pets(DB, DataTypes), { foreignKey: 'id' })
@@ -35,10 +35,10 @@ module.exports.getReservationsWeek = async (req, res) => {
         item = item.dataValues;
 
         if (moment(item.time).isBetween(weekStart, weekEnd)) {
-            if (week[moment(item.time).day()]) {
-                week[moment(item.time).day()].push(item);
+            if (week[moment(item.time).isoWeekday()-1]) {
+                week[moment(item.time).isoWeekday()-1].push(item);
             } else {
-                week[moment(item.time).day()] = [item];
+                week[moment(item.time).isoWeekday()-1] = [item];
             }
         }
 

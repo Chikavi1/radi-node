@@ -15,6 +15,8 @@ const VetsController = require('../controllers/VetsController');
 const ProductsController = require('../controllers/ProductsController');
 const ServicesController = require('../controllers/ServicesController');
 const IsolationsController = require('../controllers/IsolationsController');
+const VisitsController = require('../controllers/VisitsController');
+const MedicinesController = require('../controllers/MedicinesController');
 const ReviewsController = require('../controllers/ReviewsController');
 const PublicController = require('../controllers/PublicControllers');
 const StripeController = require('../controllers/StripeController');
@@ -88,6 +90,7 @@ module.exports = function(){
     router.get('/get_vet/:idVet', VetsController.getVet);
     router.get('/get_vets/:offset/:limit', VetsController.getVets);
     router.get('/near_vets/:lat/:long', VetsController.nearVets);
+    router.get('/near_vets_score/:lat/:long', VetsController.nearVetsByScore);
     router.get('/search_vets/:vet_name', VetsController.searchVets);
     router.get('/search_vets_services/:idVet/:service', VetsController.searchVetsServices);
     router.put('/update_vet', VetsController.updateVet);
@@ -98,6 +101,18 @@ module.exports = function(){
     router.get('/get_isolations/:idVet', IsolationsController.getIsolations);
     router.put('/update_isolation', IsolationsController.updateIsolation);
     router.post('/delete_isolation', IsolationsController.deleteIsolation);
+
+    // Visits
+    router.post('/create_visit', VisitsController.createVisit);
+    router.get('/get_visits/:idVet', VisitsController.getVisits);
+    router.put('/update_visit', VisitsController.updateVisit);
+    router.post('/delete_visit', VisitsController.deleteVisit);
+
+    // Medicines
+    router.post('/create_medicine', MedicinesController.createMedicine);
+    router.get('/get_medicines/:idPet', MedicinesController.getMedicines);
+    router.put('/update_medicine', MedicinesController.updateMedicine);
+    router.post('/delete_medicine', MedicinesController.deleteMedicine);
     
     // Products
     router.get('/get_products/:idVet', ProductsController.getProducts);

@@ -2,6 +2,7 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Products = require('../models/Products');
+const validateBody = require('../public/validateBody');
 
 module.exports.getProducts = async (req, res) => {
 
@@ -36,6 +37,12 @@ module.exports.updateProduct = async (req, res) => {
 module.exports.createProduct = async (req, res) => {
 
     const { title, description, price, category, amount, available, img, id_vet, status } = req.body;
+
+    if (!validateBody(title, description, price, category, amount, available, img, id_vet, status)) {
+        res.status(503);
+        res.json({msg: 'Datos incompletos'});
+        return;
+    }
 
     await Products(DB, DataTypes).create({title, description, price, category, amount, available, img, id_vet, status: (status || 1) })
     .then(() => {

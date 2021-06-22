@@ -25,6 +25,7 @@
     "express-handlebars": "^5.2.0",
     "express-session": "^1.17.1",
     "faker": "^5.5.2",
+    "helmet": "^4.6.0",
     "html-to-text": "^7.0.0",
     "jsonwebtoken": "^8.5.1",
     "juice": "^7.0.0",
