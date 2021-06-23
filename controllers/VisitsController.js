@@ -6,15 +6,15 @@ const validateBody = require('../public/validateBody');
 
 exports.createVisit = async (req, res) => {
 
-    const { weight, height, preasure, note, id_vet, id_pet, status } = req.body;
+    const { weight, height, pressure, note, id_reservation, id_pet, status } = req.body;
 
-    if (!validateBody(weight, height, preasure, note, id_vet, id_pet, status)) {
-        res.status(503);
-        res.json({msg: 'Datos incompletos'});
-        return;
-    }
+    // if (!validateBody(weight, height, pressure, note, id_reservation, id_pet, status)) {
+    //     res.status(503);
+    //     res.json({msg: 'Datos incompletos'});
+    //     return;
+    // }
 
-    await Visits(DB, DataTypes).create({ weight, height, preasure, note, id_vet, id_pet, status: (status || 1) })
+    await Visits(DB, DataTypes).create({ weight, height, pressure, note, id_reservation, id_pet, status: (status || 1) })
         .then(() => {
             res.status(200);
             res.json({msg: 'OK'});

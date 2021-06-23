@@ -6,15 +6,15 @@ const validateBody = require('../public/validateBody');
 
 exports.createVaccine = async (req, res) => {
 
-    const { id_pet, name, type, status } = req.body;
+    const { id_pet,id_visit, name, type, status } = req.body;
     
-    if (!validateBody(id_pet, name, type, status)) {
+    if (!validateBody(id_pet,id_visit, name, type)) {
         res.status(503);
         res.json({msg: 'Datos incompletos'});
         return;
     }
 
-    await Vaccines(DB, DataTypes).create({ id_pet, name, type, status: (status || 1) })
+    await Vaccines(DB, DataTypes).create({ id_pet,id_visit, name, type, status: (status || 1) })
     .then(() => {
         res.status(200);
         res.json('OK');
@@ -37,6 +37,18 @@ exports.getVaccines = async (req, res) => {
     })
 
 };
+
+exports.getVaccinesByVisit = async (req, res) => {
+    await Vaccines(DB, DataTypes).findAll({where: {"id_visit": req.params.idVisit, "status": {[Op.ne]: 0}}})
+    .then(data => {
+        res.status(200);
+        res.json(data);
+    }).catch(err => {
+        res.status(503);
+        res.json(err);
+    })
+};
+
 
 exports.updateVaccine = async (req, res) => {
 

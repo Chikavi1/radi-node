@@ -43,6 +43,8 @@ module.exports = function(){
 
     router.post('/api/login',AuthController.loginApi);
     router.post('/api/register',AuthController.registerApi);
+    router.get('/api/get_user/:id',AuthController.getUser);
+    router.put('/api/update_user',AuthController.updateUser);
 
     // PETS ROUTES
     router.get('/pets',PetsController.index);
@@ -82,8 +84,9 @@ module.exports = function(){
     router.post('/create_reservation', ReservationsController.insertReservation);
     router.post('/prereservation', ReservationsController.preReservation);
     router.get('/get_reservations_user/:idUser', ReservationsController.getReservationsByUser);
-    router.put('/update_reservations', ReservationsController.updateVet);
-
+    router.get('/get_reservations_vet/:idVet', ReservationsController.getReservationsByVet);
+    router.put('/update_reservation', ReservationsController.updateReservation);
+    router.get('/get_reservation/:id', ReservationsController.getReservation);
     router.get('/retrieve_payments', ReservationsController.retrievePayment);
 
     // Vets
@@ -105,6 +108,9 @@ module.exports = function(){
     // Visits
     router.post('/create_visit', VisitsController.createVisit);
     router.get('/get_visits/:idVet', VisitsController.getVisits);
+    router.get('/get_vaccines_by_visit/:idVisit', VaccinesController.getVaccinesByVisit);
+
+    
     router.put('/update_visit', VisitsController.updateVisit);
     router.post('/delete_visit', VisitsController.deleteVisit);
 

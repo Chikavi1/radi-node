@@ -3,13 +3,13 @@ const Usuarios = require('../models/Users');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const { Sequelize, DataTypes, where, Op } = require('sequelize');
 
-const Sequelize = require('sequelize');
-const db = require('../config/db');
-const Op = Sequelize.Op;
+const DB = require('../config/DB');
 const validateBody = require('../public/validateBody');
 
 const enviarEmail = require('../handlers/email');
+const Users = require('../models/Users');
 
 
 // exports.login = (req,res) => {
@@ -66,7 +66,7 @@ exports.loginApi = async (req, res, next) => {
         return;
     }
 
-    const usuario = await Usuarios(db, Sequelize.DataTypes).findOne({ where: { email } });
+    const usuario = await Usuarios(DB, Sequelize.DataTypes).findOne({ where: { email } });
     if (!usuario) {
         await res.status(401).json({ mensaje: 'Usuario no existe.' });
         next();
@@ -96,13 +96,13 @@ exports.loginApi = async (req, res, next) => {
 exports.registerApi = async (req, res, next) => {
 
     let { name, email, password } = req.body;
-    const usuario = await Usuarios(db, Sequelize.DataTypes).findOne({ where: { email } });
+    const usuario = await Usuarios(DB, Sequelize.DataTypes).findOne({ where: { email } });
     if (usuario) {
         res.status(401).json({ mensaje: 'Ese usuario ya existe' });
         next();
     } else {
         try {
-            let user = await Usuarios(db, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8) });
+            let user = await Usuarios(DB, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8) });
             res.json({ mensaje: 'Usuario Creado', id:user.id });
         } catch (error) {
             console.log(error);
@@ -186,5 +186,33 @@ exports.validarToken = async (req, res) => {
 
     }
     res.json({ mensaje: 'token valido.', estatus: true });
+
+}
+
+exports.getUser = async (req,res) => {
+    await Users(DB, DataTypes).findAll({ where: { "id": req.params.id } })
+    .then((data) => {
+        res.status(200);
+        res.json(data);
+    }).catch((err) => {
+        res.status(503);
+        res.json(err);
+    });
+}
+
+exports.updateUser = async (req,res) => {
+
+    const updateUser = req.body;
+
+    await Users(DB, DataTypes).update(
+        updateUser,
+        { where: { "id": req.body.id} })
+        .then(data => {
+            res.status(200);
+            res.json(data);
+        }).catch(err => {
+            res.status(503);
+            res.json(err);
+        });
 
 }

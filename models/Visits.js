@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
   Visits.init({
     weight: DataTypes.INTEGER,
     height: DataTypes.INTEGER,
-    preasure: DataTypes.INTEGER,
+    pressure: DataTypes.INTEGER,
     note: DataTypes.TEXT,
-    id_vet: DataTypes.INTEGER,
+    id_reservation: DataTypes.INTEGER,
     id_pet: DataTypes.INTEGER,
     status: DataTypes.INTEGER
   }, {

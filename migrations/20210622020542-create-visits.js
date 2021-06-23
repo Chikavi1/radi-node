@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
-      presion: {
+      pressure: {
         type: Sequelize.INTEGER,
         allowNull: true
       },
@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true
       },
-      id_vet: {
+      id_reservation: {
         type: Sequelize.INTEGER,
         allowNull: true
       },

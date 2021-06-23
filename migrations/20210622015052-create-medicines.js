@@ -20,6 +20,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
+      id_visit: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
       status: {
         type: Sequelize.INTEGER,
         allowNull: true

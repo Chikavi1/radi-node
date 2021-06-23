@@ -1,4 +1,3 @@
-//const { DataTypes } = require('sequelize/types');
 const { date } = require('faker');
 const Moment = require('moment');
 const MomentRange = require('moment-range');
@@ -66,6 +65,33 @@ exports.getReservationsByUser = async (req, res) => {
 
 }
 
+exports.getReservationsByVet = async (req, res) => {
+    
+    await Reservations(DB, DataTypes).findAll({ where: { "id_vet": req.params.idVet} })
+    .then((data) => {
+        res.status(200);
+        res.json(data);
+    }).catch((err) => {
+        res.status(503);
+        res.json(err);
+    });
+
+}
+
+exports.getReservation = async (req, res) => {
+    
+    await Reservations(DB, DataTypes).findAll({ where: { "id": req.params.id } })
+    .then((data) => {
+        res.status(200);
+        res.json(data);
+    }).catch((err) => {
+        res.status(503);
+        res.json(err);
+    });
+
+}
+
+
 exports.preReservation = async (req, res) => {
     
     let schedule, dayStart, dayEnd;
@@ -113,11 +139,18 @@ exports.preReservation = async (req, res) => {
 
 }
 
+function uuidv4() {
+    return 'xxxxxxxxRD'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
 exports.updateReservation = async (req, res) => {
 
     const updateReservation = req.body;
 
-    await Reviews(DB, DataTypes).update(
+    await Reservations(DB, DataTypes).update(
         updateReservation,
         { where: { "id": req.body.id, "status": {[Op.ne]: 0}} })
         .then(data => {
@@ -231,6 +264,7 @@ if(true){
     }
     // Codigo
 
+    code = uuidv4();
 
     console.log(moment.utc(time).format('YYYY-MM-DD HH:mm:ss'))
     if (!payment_accepted) { // Pago NO aceptado
@@ -245,6 +279,7 @@ if(true){
             id_vet,
             id_pet,
             id_user,
+            code,
             time: moment.utc(time),
             duration: duration || 60,
             status: (status || 1)
