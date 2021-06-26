@@ -169,11 +169,13 @@ module.exports.insertReservation = async (req, res) => {
     let payment_accepted = true;
     const { payment_id, amount, name, note, payment, price, id_vet, id_user, id_pet, time, duration, status } = req.body;
 
-    // if (!validateBody(payment_id, amount, name, note, payment, price, id_vet, id_user, id_pet, time, duration, status)) {
-    //     res.status(503);
-    //     res.json({msg: 'Datos incompletos'});
-    //     return;
-    // }
+    let validate = validateBody(await Reservations(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
+        res.status(503);
+        res.json({fields_empty: validate});
+        return;
+    }
 
     // Validacion Horario
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });

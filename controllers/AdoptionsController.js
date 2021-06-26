@@ -20,23 +20,11 @@ exports.add = (req,res) => {
         status
     } = req.body;
 
-    if (!validateBody(
-        name,
-        email,
-        identification,
-        cellphone,
-        address,
-        exterior_number,
-        interior_number,
-        zip,
-        neighborhood,
-        city,
-        state,
-        userId,
-        petId,
-        status)) {
+    let validate = validateBody(await Adoptions.describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

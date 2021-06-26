@@ -60,9 +60,11 @@ exports.loginApi = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    if (!validateBody(email, password)) {
+    let validate = validateBody(await Usuarios(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({ msg: 'Datos incompletos' });
+        res.json({fields_empty: validate});
         return;
     }
 

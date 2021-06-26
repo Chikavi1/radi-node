@@ -169,26 +169,12 @@ exports.store = async (req, res, next) => {
     geolocation,
   } = req.body;
 
-  if (!validateBody(
-    name,
-    photo,
-    age,
-    city,
-    color,
-    description,
-    size,
-    breed,
-    gender,
-    status,
-    vacumms_id,
-    id_user,
-    verified,
-    specie,
-    code,
-    geolocation)) {
-    res.status(503);
-    res.json({ msg: 'Datos incompletos' });
-    return;
+  let validate = validateBody(await Pets(DB, DataTypes).describe(), req.body);
+
+  if (validate !== true) {
+      res.status(503);
+      res.json({fields_empty: validate});
+      return;
   }
 
   try {

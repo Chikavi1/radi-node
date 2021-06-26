@@ -8,9 +8,11 @@ exports.createVaccine = async (req, res) => {
 
     const { id_pet,id_visit, name, type, status } = req.body;
     
-    if (!validateBody(id_pet,id_visit, name, type)) {
+    let validate = validateBody(await Vaccines(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

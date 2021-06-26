@@ -8,9 +8,11 @@ exports.createMedicine = async (req, res) => {
 
     const { name, treatment, unit, id_user, id_pet, status } = req.body;
 
-    if (!validateBody(name, treatment, unit, id_user, id_pet, status)) {
+    let validate = validateBody(await Medicines(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

@@ -58,9 +58,11 @@ exports.create = async (req,res,next) => {
 
     const { headline,amount,message,status } = req.body;
 
-    if (!validateBody(headline,amount,message,status)) {
+    let validate = validateBody(await Donations(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

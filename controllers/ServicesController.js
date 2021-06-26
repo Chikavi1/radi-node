@@ -38,9 +38,11 @@ module.exports.createService = async (req, res) => {
 
     const { title, description, price, available, img, id_vet, status } = req.body;
 
-    if (!validateBody(title, description, price, available, img, id_vet, status)) {
+    let validate = validateBody(await Services(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

@@ -18,20 +18,12 @@ exports.createOrganization = async (req, res) => {
     status
   } = req.body;
 
-  if (!validateBody(
-    name,
-    address,
-    social_media,
-    cellphone,
-    cover,
-    photo,
-    description,
-    id_user,
-    status
-  )) {
-    res.status(503);
-    res.json({ msg: 'Datos incompletos' });
-    return;
+  let validate = validateBody(await Organizations(DB, DataTypes).describe(), req.body);
+
+  if (validate !== true) {
+      res.status(503);
+      res.json({fields_empty: validate});
+      return;
   }
 
   await Organizations(DB, DataTypes).create({

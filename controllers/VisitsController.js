@@ -8,11 +8,13 @@ exports.createVisit = async (req, res) => {
 
     const { weight, height, pressure, note, id_reservation, id_pet, status } = req.body;
 
-    // if (!validateBody(weight, height, pressure, note, id_reservation, id_pet, status)) {
-    //     res.status(503);
-    //     res.json({msg: 'Datos incompletos'});
-    //     return;
-    // }
+    let validate = validateBody(await Visits(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
+        res.status(503);
+        res.json({fields_empty: validate});
+        return;
+    }
 
     await Visits(DB, DataTypes).create({ weight, height, pressure, note, id_reservation, id_pet, status: (status || 1) })
         .then(() => {

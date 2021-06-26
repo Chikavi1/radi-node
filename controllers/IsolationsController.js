@@ -9,9 +9,11 @@ exports.createIsolation = async (req, res) => {
 
     const { time_end, time_start, id_vet, status } = req.body;
 
-    if (!validateBody(time_end, time_start, id_vet, status)) {
+    let validate = validateBody(await Isolations(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

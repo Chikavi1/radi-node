@@ -8,9 +8,11 @@ exports.createReview = async (req, res) => {
 
     const { id_vet, id_user, score, comment, date, status } = req.body;
 
-    if (!validateBody(id_vet, id_user, score, comment, date, status)) {
+    let validate = validateBody(await Reviews(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 

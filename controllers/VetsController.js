@@ -139,9 +139,11 @@ module.exports.createVet = async (req, res) => {
 
     const { name, profile, phone, description, services, latitude, longitude, schedule, weekend, status } = req.body;
 
-    if (!validateBody(name, profile, phone, description, services, latitude, longitude, schedule, weekend, status)) {
+    let validate = validateBody(await Vets(DB, DataTypes).describe(), req.body);
+
+    if (validate !== true) {
         res.status(503);
-        res.json({msg: 'Datos incompletos'});
+        res.json({fields_empty: validate});
         return;
     }
 
