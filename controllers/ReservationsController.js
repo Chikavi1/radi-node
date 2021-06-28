@@ -25,7 +25,7 @@ module.exports.getReservationsWeek = async (req, res) => {
     Pets(DB, DataTypes).hasMany(Reservations(DB, DataTypes), { foreignKey: 'id_pet' });
     Reservations(DB, DataTypes).belongsTo(Pets(DB, DataTypes), { foreignKey: 'id' })
 
-    let result = await Reservations(DB, DataTypes).findAll({ where: { "id_vet": req.params.idVet} });
+    let result = await Reservations(DB, DataTypes).findAll({ where: { "id_vet": req.params.idVet, "status": 1} });
 
     //let [result, meta] = await DB.query('select p.name, r.note, r.time, r.id_pet from reservations r inner join pets p on p.id=r.id_pet where r.id_vet=' + req.params.idVet);
 
@@ -67,7 +67,10 @@ exports.getReservationsByUser = async (req, res) => {
 
 exports.getReservationsByVet = async (req, res) => {
     
-    await Reservations(DB, DataTypes).findAll({ where: { "id_vet": req.params.idVet} })
+    await Reservations(DB, DataTypes).findAll({
+        where: { "id_vet": req.params.idVet},
+        offset: parseInt(req.params.offset) || 1, limit: parseInt(req.params.limit) || 1
+    })
     .then((data) => {
         res.status(200);
         res.json(data);

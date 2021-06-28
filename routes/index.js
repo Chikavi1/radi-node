@@ -84,14 +84,14 @@ module.exports = function(){
     router.post('/create_reservation', ReservationsController.insertReservation);
     router.post('/prereservation', ReservationsController.preReservation);
     router.get('/get_reservations_user/:idUser', ReservationsController.getReservationsByUser);
-    router.get('/get_reservations_vet/:idVet', ReservationsController.getReservationsByVet);
+    router.get('/get_reservations_vet/:idVet/:limit/:offset', ReservationsController.getReservationsByVet);
     router.put('/update_reservation', ReservationsController.updateReservation);
     router.get('/get_reservation/:id', ReservationsController.getReservation);
     router.get('/retrieve_payments', ReservationsController.retrievePayment);
 
     // Vets
     router.get('/get_vet/:idVet', VetsController.getVet);
-    router.get('/get_vets/:offset/:limit', VetsController.getVets);
+    router.get('/get_vets/:limit/:offset', VetsController.getVets);
     router.get('/near_vets/:lat/:long', VetsController.nearVets);
     router.get('/near_vets_score/:lat/:long', VetsController.nearVetsByScore);
     router.get('/search_vets/:vet_name', VetsController.searchVets);
