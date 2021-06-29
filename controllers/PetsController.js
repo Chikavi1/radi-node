@@ -6,29 +6,39 @@ const validateBody = require('../public/validateBody');
 
 const shortid = require('shortid');
 const multer = require('multer');
+const aws = require('aws-sdk');
+const multerS3 = require('multer-s3');
+
+const spacesEndpoint = new aws.Endpoint('sfo3.digitaloceanspaces.com');
+const s3 = new aws.S3({
+  endpoint: spacesEndpoint
+});
 
 const configuracionMulter = {
   limits: { fileSize: 5000000 },
-  storage: fileStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, __dirname + '/../uploads')
-    },
-    filename: (req, file, cb) => {
-      const extension = file.mimetype.split('/')[1];
-      cb(null, `${shortid.generate()}.${extension}`);
+  storage: multerS3({
+    s3: s3,
+    bucket: 'radi',
+    acl: 'public-read',
+    key: function (request, file, cb) {
+      let parts = file.originalname.split('.');
+      cb(null, Date.now().toString()+'.'+parts[parts.length-1]);
     }
   })
 }
 
 const upload = multer(configuracionMulter).single('photo');
 
-exports.subirArchivo = (req, res, next) => {
+exports.subirArchivo = (req, res) => {
 
   upload(req, res, async (error) => {
+
     if (error) {
       res.json({ mensaje: error })
+      return;
     }
-    return res.json(req.file.filename);
+
+    return res.json(req.file.key);
   });
 }
 
@@ -147,8 +157,6 @@ exports.searchPets = async (req, res) => {
 }
 
 exports.store = async (req, res, next) => {
-
-  console.log(req.body);
 
   const {
     name,
