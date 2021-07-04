@@ -12,6 +12,7 @@ const Vets = require('../models/Vets');
 const Users = require('../models/Users');
 const Reservations = require('../models/Reservations');
 const validateBody = require('../public/validateBody');
+const scoreControl = require('../public/scoreControl');
 
 const moment = MomentRange.extendMoment(Moment);
 
@@ -270,6 +271,10 @@ if(true){
     // Codigo
 
     code = uuidv4();
+
+    // Aumentar score
+    scoreControl.increment(Vets(DB, DataTypes), id_vet, 1);
+    scoreControl.increment(Pets(DB, DataTypes), id_vet, 1);
 
     console.log(moment.utc(time).format('YYYY-MM-DD HH:mm:ss'))
     if (!payment_accepted) { // Pago NO aceptado

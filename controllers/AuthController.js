@@ -57,14 +57,16 @@ exports.googleCallback = passport.authenticate('google', {
 
 exports.loginApi = async (req, res, next) => {
 
-
     const { email, password } = req.body;
 
-    let validate = validateBody(await Usuarios(DB, DataTypes).describe(), req.body);
-
-    if (validate !== true) {
+    if (!email) {
         res.status(503);
-        res.json({fields_empty: validate});
+        res.json({fields_empty: ['email']});
+        return;
+    }
+    if (!password) {
+        res.status(503);
+        res.json({fields_empty: ['password']});
         return;
     }
 
