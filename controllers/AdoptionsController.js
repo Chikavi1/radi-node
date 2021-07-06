@@ -1,7 +1,7 @@
 const Adoptions = require('../models/Adoptions');
 const validateBody = require('../public/validateBody');
 
-exports.add = (req,res) => {
+exports.add = async (req,res) => {
     const {  
         
         name,

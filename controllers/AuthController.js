@@ -60,13 +60,13 @@ exports.loginApi = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    let validate = validateBody(await Usuarios(DB, DataTypes).describe(), req.body);
+    // let validate = validateBody(await Usuarios(DB, DataTypes).describe(), req.body);
 
-    if (validate !== true) {
-        res.status(503);
-        res.json({fields_empty: validate});
-        return;
-    }
+    // if (validate !== true) {
+    //     res.status(503);
+    //     res.json({fields_empty: validate});
+    //     return;
+    // }
 
     const usuario = await Usuarios(DB, Sequelize.DataTypes).findOne({ where: { email } });
     if (!usuario) {
@@ -96,16 +96,16 @@ exports.loginApi = async (req, res, next) => {
 }
 
 exports.registerApi = async (req, res, next) => {
-
-    let { name, email, password } = req.body;
+    console.log(req.body);
+    let { name, email, password,customer } = req.body;
     const usuario = await Usuarios(DB, Sequelize.DataTypes).findOne({ where: { email } });
     if (usuario) {
         res.status(401).json({ mensaje: 'Ese usuario ya existe' });
         next();
     } else {
         try {
-            let user = await Usuarios(DB, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8) });
-            res.json({ mensaje: 'Usuario Creado', id:user.id });
+            let user = await Usuarios(DB, Sequelize.DataTypes).create({ name, email, password: bcrypt.hashSync(password, 8),customer,status:1 });
+            res.json({ mensaje: 'Usuario creado satisfactoriamente.', id:user.id });
         } catch (error) {
             console.log(error);
             res.json({ mensaje: 'Hubo un error' });

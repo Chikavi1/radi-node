@@ -14,11 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Medicines.init({
-    name: DataTypes.STRING,
-    treatment: DataTypes.STRING,
-    unit: DataTypes.INTEGER,
-    status: DataTypes.INTEGER,
-    id_user:DataTypes.INTEGER
+    name:       DataTypes.STRING,
+    treatment:  DataTypes.STRING,
+    unit:       DataTypes.INTEGER,
+    status:     DataTypes.INTEGER,
+    id_user:    DataTypes.INTEGER,
+    id_visit:   DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Medicines',

@@ -6,6 +6,8 @@ const DB = require('../config/db');
 const Vets = require('../models/Vets');
 const Services = require('../models/Services');
 const validateBody = require('../public/validateBody');
+const bcrypt = require('bcrypt');
+
 
 module.exports.getVet = async (req, res) => {
 
@@ -121,13 +123,13 @@ module.exports.nearVetsByScore = async (req, res) => {
 module.exports.updateVet = async (req, res) => {
 
     const updatedVet = req.body;
-
+    console.log(req.body);
     await Vets(DB, DataTypes).update(
         updatedVet,
         { where: { "id": req.body.id, "status": { [Op.ne]: 0 } } })
         .then(data => {
             res.status(200);
-            res.json(data);
+            res.json({status: 200});
         }).catch(err => {
             res.status(503);
             res.send(err);
@@ -137,33 +139,63 @@ module.exports.updateVet = async (req, res) => {
 
 module.exports.createVet = async (req, res) => {
 
-    const { name, profile, phone, description, services, latitude, longitude, schedule, weekend, status } = req.body;
 
-    let validate = validateBody(await Vets(DB, DataTypes).describe(), req.body);
+    const { email,password,currency,name, profile, phone, description, services, latitude, longitude, schedule, weekend,score, status } = req.body;
+    console.log(req.body);
 
-    if (validate !== true) {
-        res.status(503);
-        res.json({fields_empty: validate});
-        return;
+    // let validate = validateBody(await Vets(DB, DataTypes).describe(), req.body);
+
+    // if (validate !== true) {
+    //     res.status(503);
+    //     res.json({fields_empty: validate});
+    //     return;
+    // }
+
+    try {
+        let user = await Vets(DB, Sequelize.DataTypes)
+        .create({
+            email,
+            password: bcrypt.hashSync(password, 8),
+            currency,
+            name,
+            description,
+            phone,
+            services,
+            latitude,
+            longitude,
+            profile,
+            weekend,
+            schedule,
+            score,
+            status: 1
+        });
+        res.json({ mensaje: 'vet Creado', id:user.id,status: 200 });
+    } catch (error) {
+        console.log(error);
+        res.json({ mensaje: 'Hubo un error' });
     }
 
-    await Vets(DB, DataTypes).create({
-        name,
-        description,
-        phone,
-        services,
-        latitude,
-        longitude,
-        profile,
-        weekend,
-        schedule,
-        status: (status || 1)
-    }).then(() => {
-        res.status(200);
-        res.send('OK');
-    }).catch((err) => {
-        res.status(503);
-        res.send(err);
-    });
+    // const vet = await Vets(DB, DataTypes).create({
+    //     email,
+    //     password: bcrypt.hashSync(password, 8),
+    //     currency,
+    //     name,
+    //     description,
+    //     phone,
+    //     services,
+    //     latitude,
+    //     longitude,
+    //     profile,
+    //     weekend,
+    //     schedule,
+    //     score,
+    //     status: (status || 1)
+    // }).then(() => {
+    //     res.json({ mensaje: 'se ha Creado', vet});
+    //     res.status(200);
+    // }).catch((err) => {
+    //     res.status(503);
+    //     res.send(err);
+    // });
 
 }
