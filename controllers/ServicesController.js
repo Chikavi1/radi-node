@@ -36,7 +36,8 @@ module.exports.updateService = async (req, res) => {
 
 module.exports.createService = async (req, res) => {
 
-    const { title, description, price, available, img, id_vet, status } = req.body;
+    const { title, description, price, available, img, id_vet } = req.body;
+console.log(req.body);
 
     let validate = validateBody(await Services(DB, DataTypes).describe(), req.body);
 
@@ -46,10 +47,10 @@ module.exports.createService = async (req, res) => {
         return;
     }
 
-    await Services(DB, DataTypes).create({ title, description, price, available, img, id_vet, status: (status || 1) })
+    await Services(DB, DataTypes).create({ title, description, price, available, img, id_vet, status: 1 })
         .then(() => {
             res.status(200);
-            res.send('OK');
+            res.send({ mensaje: 'vet Creado',status: 200 });
         }).catch((err) => {
             res.status(503);
             res.send(err);

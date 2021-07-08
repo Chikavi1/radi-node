@@ -6,7 +6,7 @@ const validateBody = require('../public/validateBody');
 
 exports.createMedicine = async (req, res) => {
 
-    const { name, treatment, unit, id_user, id_pet, status } = req.body;
+    const { name, treatment, unit, id_visit, id_pet } = req.body;
 
     let validate = validateBody(await Medicines(DB, DataTypes).describe(), req.body);
 
@@ -16,7 +16,7 @@ exports.createMedicine = async (req, res) => {
         return;
     }
 
-    await Medicines(DB, DataTypes).create({ name, treatment, unit, id_user, id_pet, status: (status || 1) })
+    await Medicines(DB, DataTypes).create({ name, treatment, unit, id_visit, id_pet, status: 1 })
         .then(() => {
             res.status(200);
             res.json({msg: 'OK'});

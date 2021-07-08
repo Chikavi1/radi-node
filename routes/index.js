@@ -60,7 +60,7 @@ module.exports = function(){
     router.get('/near_pets/:lat/:long', PetsController.nearPets);
     router.get('/pets/user/:id_user',PetsController.getPetsByUser);
     router.get('/pets/adoptions_available',PetsController.adoptionsAvailable);
-
+    router.get('/adopcionpdf',PetsController.adopcionPdf)
     //router.get('/donations',DonationsController.get);
     //router.post('/donations',DonationsController.create);
 
@@ -150,18 +150,33 @@ module.exports = function(){
 
 
     // stripe connect
-    router.get('/createCostumer/:token/:email/:name',StripeController.createCostumer);
+
+    // router.get('/createCostumer/:token/:email/:name',StripeController.createCostumer);
+
+    // costumer
+    router.post('/createCostumer/',StripeController.createCostumer);
     router.get('/getCostumer/:costumerid',StripeController.getCostumer);
     router.get('/updateCostumer/:costumerid/:card',StripeController.updateCostumer);
-
+    // cards
     router.get('/getCards/:costumerid',StripeController.getCards);
     router.get('/getCard/:costumerid/:card',StripeController.getCard);
-    router.get('/addCard/:costumerid/:token',StripeController.addCard);
+    router.post('/addCard',StripeController.addCard);
     router.get('/deleteCard/:costumerid/:card',StripeController.deleteCard);
+    // accounts
+    router.post('/createAccount',StripeController.createAccount);
+    router.post('/createLinks',StripeController.createLinks);
+    router.post('/getAccount',StripeController.getAccount);
+    router.post('/deleteAccount',StripeController.deleteAccount);
+    router.post('/getBalance/',StripeController.getBalance);
+
+    // charges
+    router.post('/getCharges/',StripeController.getCharges);
+    router.post('/createCharge',StripeController.CreateCharge)
 
 
-    router.get('/getCharges/:accountid',StripeController.getCharges);
-    router.get('/getBalance/:accountid',StripeController.getBalance);
+    // assets
+    router.get('/createBankAccount',StripeController.createBankAccount);
+    router.post('/createToken',StripeController.createToken);
 
     return router;
 }

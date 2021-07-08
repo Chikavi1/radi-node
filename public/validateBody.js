@@ -4,7 +4,7 @@ module.exports = function (model, body) { // Regresa true si todos los datos est
 
     for (let key_model of Object.keys(model)) {
 
-        if (!body[key_model] && key_model !== 'id' && key_model !== "createdAt" && key_model !== "updatedAt")
+        if (!body[key_model] && key_model !== 'id'&& key_model !== "status"  && key_model !== "createdAt" && key_model !== "updatedAt")
             fields_empty.push(key_model);
         
     }

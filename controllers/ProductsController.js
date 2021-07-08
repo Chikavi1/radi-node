@@ -36,17 +36,17 @@ module.exports.updateProduct = async (req, res) => {
 
 module.exports.createProduct = async (req, res) => {
 
-    const { title, description, price, category, amount, available, img, id_vet, status } = req.body;
+    const { title, description, price, category, amount, available, img, id_vet } = req.body;
 
-    let validate = validateBody(await Products(DB, DataTypes).describe(), req.body);
+    // let validate = validateBody(await Products(DB, DataTypes).describe(), req.body);
 
-    if (validate !== true) {
-        res.status(503);
-        res.json({fields_empty: validate});
-        return;
-    }
+    // if (validate !== true) {
+    //     res.status(503);
+    //     res.json({fields_empty: validate});
+    //     return;
+    // }
 
-    await Products(DB, DataTypes).create({title, description, price, category, amount, available, img, id_vet, status: (status || 1) })
+    await Products(DB, DataTypes).create({title, description, price, category, amount, available, img, id_vet, status: 1 })
     .then(() => {
         res.status(200);
         res.send('OK');

@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes, Op } = require('sequelize');
+const pdf = require('html-pdf');
 
 const DB = require('../config/db');
 const Pets = require('../models/Pets');
@@ -169,21 +170,18 @@ exports.store = async (req, res, next) => {
     breed,
     gender,
     status,
-    vacumms_id,
     id_user,
-    verified,
     specie,
-    code,
     geolocation,
   } = req.body;
 
-  let validate = validateBody(await Pets(DB, DataTypes).describe(), req.body);
+  // let validate = validateBody(await Pets(DB, DataTypes).describe(), req.body);
 
-  if (validate !== true) {
-      res.status(503);
-      res.json({fields_empty: validate});
-      return;
-  }
+  // if (validate !== true) {
+  //     res.status(503);
+  //     res.json({fields_empty: validate});
+  //     return;
+  // }
 
   try {
 
@@ -255,11 +253,30 @@ exports.show = async (req, res) => {
     where: { id, "status": { [Op.ne]: 0 } }
   });
 
-  pets.photo = "http://localhost:8080/" + pets.photo;
   console.log(pets)
 
   res.json(pets);
 }
+
+
+exports.adopcionPdf = async (req, res) => {
+  const content = `
+  <h1>Título en el PDF creado con el paquete html-pdf</h1>
+  <p>Generando un PDF con un HTML sencillo</p>
+  `;
+  
+  pdf.create(content).toFile('./html-pdf.pdf', function(err, res) {
+      if (err){
+          console.log(err);
+      } else {
+          console.log(res);
+      }
+  });
+
+  return pdf;
+}
+
+
 
 
 // exports.index = (req, res,next) => {
