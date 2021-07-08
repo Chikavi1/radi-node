@@ -12,7 +12,7 @@ const Vets = require('../models/Vets');
 const Users = require('../models/Users');
 const Reservations = require('../models/Reservations');
 const validateBody = require('../public/validateBody');
-
+const StripeController = require('../controllers/StripeController');
 const moment = MomentRange.extendMoment(Moment);
 
 module.exports.getReservationsWeek = async (req, res) => {
@@ -167,10 +167,11 @@ exports.updateReservation = async (req, res) => {
 }
 
 module.exports.insertReservation = async (req, res) => {
+    console.log('paso chava');
 
     let notAvailable = false;
     let payment_accepted = true;
-    const { payment_id, amount, name, note, payment, price, id_vet, id_user, id_pet, time, duration, status } = req.body;
+    const { name, note, payment, price,id_service, id_vet, id_user, id_pet, time, duration, status } = req.body;
 
     let validate = validateBody(await Reservations(DB, DataTypes).describe(), req.body);
 
@@ -201,62 +202,38 @@ module.exports.insertReservation = async (req, res) => {
     // Codigo
     try {
 
-        // const generate = await stripe.paymentMethods.create({
-        //     type: 'card',
-        //     card: {
-        //         number: 4242424242424242,
-        //         cvc: 424,
-        //         exp_month: 04,
-        //         exp_year: 2024,   
-        //     }
-        // });
-
-
-        // const payment = await stripe.paymentIntents.create({
-        //     amount,
-        //     currency: "COP",
-        //     description: 'Compra en Radi',
-        //     payment_method: generate.id,
-        //     confirm: true,
-            
-        //     // application_fee_amount: 1000,
-        //     // transfer_data: {
-        //     //     destination: 'acct_1IiBSHJl56kWzuPa',
-        //     // }
-
-        // });
+     const payment =  StripeController.createcharge(amount,customer,account_id);
 
         // console.log(payment.status);
 
         // if(payment.status === 'succeeded'){
-if(true){
-
+        if(true){    
             // envia notificacion a veterinario
 
-            // axios.post('https://onesignal.com/api/v1/notifications', {
-            //     app_id: 'e15689c2-569b-482f-9364-a8fca5641826',
-            //     data: { "userId" : "Postman-1234" },
-            //     contents: { en: "English message from Postman", es: "Reservación para el viernes 30 de abril de 2021 de 8:00 am a 9:00 am" },
-            //     headings: { en: "English Title", es: "Reservacion en Radi🐶" },
-            //     include_player_ids: ["75f57802-eebf-49ec-a9b6-911a07f1edb2"]
-            // })
-            // .then(function (response) {
-            //     console.log('jejejej');
-            //     console.log(response);
-            // })
-            // .catch(function (error) {
-            //     console.log(error);
-            // });
+            axios.post('https://onesignal.com/api/v1/notifications', {
+                app_id: 'e15689c2-569b-482f-9364-a8fca5641826',
+                data: { "userId" : "Postman-1234" },
+                contents: { en: "English message from Postman", es: "Reservación para el viernes 30 de abril de 2021 de 8:00 am a 9:00 am" },
+                headings: { en: "English Title", es: "Reservacion en Radi🐶" },
+                include_player_ids: ["75f57802-eebf-49ec-a9b6-911a07f1edb2"]
+            })
+            .then(function (response) {
+                console.log('jejejej');
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
-            // const resetUrl = `http://localhost:3000/reestablecer/112asdasddas`;
-            // const usuario  = 'chikavi';
+            const resetUrl = `http://localhost:3000/reestablecer/112asdasddas`;
+            const usuario  = 'chikavi';
     
-            // await enviarEmail.enviar({
-            //     usuario,
-            //     subject: 'Reestablecer contraseña',
-            //     resetUrl,
-            //     archivo: 'reservacion'
-            // });
+            await enviarEmail.enviar({
+                usuario,
+                subject: 'Reestablecer contraseña',
+                resetUrl,
+                archivo: 'reservacion'
+            });
         
             // res.json({ mensaje:'Se ha enviado el correo' });
         
@@ -269,7 +246,7 @@ if(true){
     }
     // Codigo
 
-    code = uuidv4();
+    payment_accepted = true;
 
     console.log(moment.utc(time).format('YYYY-MM-DD HH:mm:ss'))
     if (!payment_accepted) { // Pago NO aceptado
@@ -284,7 +261,8 @@ if(true){
             id_vet,
             id_pet,
             id_user,
-            code,
+            id_service,
+            code: uuidv4(),
             time: moment.utc(time),
             duration: duration || 60,
             status: (status || 1)
