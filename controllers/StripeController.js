@@ -348,21 +348,27 @@ module.exports.createLinks = async (req, res) => {
         return res.json(links);
 }
 
+module.exports.createcharge = async (amount,customer,account_id) => {
+
+    const charge = await stripe.charges.create({
+        amount,
+        currency: 'usd',
+        customer,
+        description: 'compra en radis',
+        application_fee_amount: 1000,
+        transfer_data: {
+            destination: account_id,
+        },
+        });
+
+    return charge;
+}
 
 module.exports.CreateCharge = async (req, res) => {
 
     const { amount,customer,account_id} = req.body
     console.log(req.body);
-const charge = await stripe.charges.create({
-    amount,
-    currency: 'usd',
-    customer,
-    description: 'compra en radiss',
-    application_fee_amount: 1000,
-    transfer_data: {
-        destination: account_id,
-    },
-    });
+    const charge = module.exports.createcharge(amount,customer,account_id);
     return res.json(charge);
 
 }
