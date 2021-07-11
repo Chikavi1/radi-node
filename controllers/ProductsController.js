@@ -56,3 +56,18 @@ module.exports.createProduct = async (req, res) => {
     });
 
 }
+
+module.exports.deleteProduct = async (req, res) => {
+
+    await Products(DB, DataTypes).update(
+        { status: 0 },
+        { where: { "id": req.body.id } })
+        .then(data => {
+            res.status(200);
+            res.json(data);
+        }).catch(err => {
+            res.status(503);
+            res.json(err);
+        })
+
+}
