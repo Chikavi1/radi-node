@@ -4,3 +4,4 @@ uploads/
 config/db.js
 config/*
 package-lock.json
+config/
