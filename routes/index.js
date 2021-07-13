@@ -90,12 +90,13 @@ module.exports = function(){
     router.get('/retrieve_payments', ReservationsController.retrievePayment);
 
     // Vets
+    router.post('/vet/login',AuthController.loginVet);
     router.get('/get_vet/:idVet', VetsController.getVet);
     router.get('/get_vets/:limit/:offset', VetsController.getVets);
     router.get('/near_vets/:lat/:long', VetsController.nearVets);
     router.get('/near_vets_score/:lat/:long', VetsController.nearVetsByScore);
     router.get('/search_vets/:vet_name', VetsController.searchVets);
-    router.get('/search_vets_services/:idVet/:service', VetsController.searchVetsServices);
+    router.get('/search_vets_services/:service', VetsController.searchVetsServices);
     router.put('/update_vet', VetsController.updateVet);
     router.post('/create_vet', VetsController.createVet);
 
@@ -144,8 +145,15 @@ module.exports = function(){
     router.post('/delete_vaccine', VaccinesController.deleteVaccine);
 
     // adoptions
-    router.post('/adoptions', AdoptionsController.add);
-    router.get('/adoptions_user/:userId',AdoptionsController.show);
+    // router.post('/adoptions', AdoptionsController.add);
+
+    router.get('/adoptions/:organizationId',AdoptionsController.getAdoptionsOrganization);
+    router.get('/adoptions_user/:userId',AdoptionsController.getAdoptionsUser);
+    router.get('/get_response/:id',AdoptionsController.getResponseAdoption);
+    router.get('/get_adoption/:id',AdoptionsController.getAdoptionId);
+    router.put('/update_adoption', AdoptionsController.updateAdoption);
+    router.post('/delete_adoption', AdoptionsController.deleteAdoption);
+
     // router.get('/adoptions_pet/:userId')
 
 
