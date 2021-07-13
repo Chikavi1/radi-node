@@ -355,7 +355,7 @@ module.exports.createcharge = async (amount,customer,account_id) => {
         currency: 'usd',
         customer,
         description: 'compra en radis',
-        application_fee_amount: 1000,
+        application_fee_amount: 100,
         transfer_data: {
             destination: account_id,
         },
