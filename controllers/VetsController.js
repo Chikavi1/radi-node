@@ -78,6 +78,37 @@ exports.searchVetsServices = async (req, res) => {
 
 }
 
+module.exports.relatedVets = async (req, res) => {
+
+    let final = {};
+
+    try {
+
+        for (let service of req.params.services.split(',')) {
+
+            let [result, meta] = await DB.query(`
+                SELECT *, ((ACOS(SIN(${req.params.lat} * PI() / 180) * 
+                SIN(latitude * PI() / 180) + COS(${req.params.lat} * PI() / 180) * 
+                COS(latitude * PI() / 180) * COS((${req.params.long} - longitude) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1.609344) 
+                as distance FROM Vets WHERE services LIKE '%${service}%' and id != ${req.params.idCurrent} and status != 0 HAVING distance <= 5 ORDER BY distance ASC;
+                `);
+
+            for (let item of result) {
+                final[item.id] = item;
+            }
+
+        }
+
+        res.status(200);
+        res.json(final);
+
+    } catch (err) {
+        res.status(503);
+        res.send(err);
+    }
+
+}
+
 module.exports.nearVets = async (req, res) => {
 
     try {
@@ -107,7 +138,7 @@ module.exports.nearVetsByScore = async (req, res) => {
             SELECT *, ((ACOS(SIN(${req.params.lat} * PI() / 180) * 
             SIN(latitude * PI() / 180) + COS(${req.params.lat} * PI() / 180) * 
             COS(latitude * PI() / 180) * COS((${req.params.long} - longitude) * PI() / 180)) * 180 / PI()) * 60 * 1.1515 * 1.609344) 
-            as distance FROM Vets WHERE status!=0 HAVING distance <= 5 ORDER BY distance ASC, score;
+            as distance FROM Vets WHERE status!=0 HAVING distance <= 5 ORDER BY score, distance ASC;
             `);
 
         res.status(200);
@@ -197,5 +228,20 @@ module.exports.createVet = async (req, res) => {
     //     res.status(503);
     //     res.send(err);
     // });
+
+}
+
+module.exports.deleteVet = async (req, res) => {
+
+    await Vets(DB, DataTypes).update(
+        { status: 0 },
+        { where: { "id": req.body.id } })
+        .then(data => {
+            res.status(200);
+            res.json(data);
+        }).catch(err => {
+            res.status(503);
+            res.json(err);
+        })
 
 }

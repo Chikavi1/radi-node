@@ -37,14 +37,19 @@ exports.googleCallback = passport.authenticate('google', {
 
 
 exports.loginApi = async (req, res, next) => {
-    const { email, password } = req.body;
-    // let validate = validateBody(await Usuarios(DB, DataTypes).describe(), req.body);
 
-    // if (validate !== true) {
-    //     res.status(503);
-    //     res.json({fields_empty: validate});
-    //     return;
-    // }
+    const { email, password } = req.body;
+
+    if (!email) {
+        res.status(503);
+        res.json({fields_empty: ['email']});
+        return;
+    }
+    if (!password) {
+        res.status(503);
+        res.json({fields_empty: ['password']});
+        return;
+    }
 
     const usuario = await Usuarios(DB, Sequelize.DataTypes).findOne({ where: { email } });
     if (!usuario) {

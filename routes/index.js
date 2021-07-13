@@ -86,6 +86,7 @@ module.exports = function(){
     router.get('/get_reservations_user/:idUser', ReservationsController.getReservationsByUser);
     router.get('/get_reservations_vet/:idVet/:limit/:offset', ReservationsController.getReservationsByVet);
     router.put('/update_reservation', ReservationsController.updateReservation);
+    router.post('/delete_reservation', ReservationsController.deleteReservation);
     router.get('/get_reservation/:id', ReservationsController.getReservation);
     router.get('/retrieve_payments', ReservationsController.retrievePayment);
 
@@ -94,11 +95,13 @@ module.exports = function(){
     router.get('/get_vet/:idVet', VetsController.getVet);
     router.get('/get_vets/:limit/:offset', VetsController.getVets);
     router.get('/near_vets/:lat/:long', VetsController.nearVets);
+    router.get('/near_vets/:lat/:long/:services/:idCurrent', VetsController.relatedVets);
     router.get('/near_vets_score/:lat/:long', VetsController.nearVetsByScore);
     router.get('/search_vets/:vet_name', VetsController.searchVets);
     router.get('/search_vets_services/:service', VetsController.searchVetsServices);
     router.put('/update_vet', VetsController.updateVet);
     router.post('/create_vet', VetsController.createVet);
+    router.post('/delete_vet', VetsController.deleteVet);
 
     // Isolations
     router.post('/create_isolation', IsolationsController.createIsolation);
@@ -124,11 +127,13 @@ module.exports = function(){
     // Products
     router.get('/get_products/:idVet', ProductsController.getProducts);
     router.put('/update_product', ProductsController.updateProduct);
+    router.post('/delete_product', ProductsController.deleteProduct);
     router.post('/create_product', ProductsController.createProduct);
-
+    
     // Services
     router.get('/get_services/:idVet', ServicesController.getServices);
     router.put('/update_service', ServicesController.updateService);
+    router.post('/delete_service', ServicesController.deleteService);
     router.post('/create_service', ServicesController.createService);
     
     // Reviews

@@ -3,21 +3,21 @@
     "username": "root",
     "password": "12345",
     "database": "radi",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": "checo",
+    "password": "Elradipet10Ltñ.",
+    "database": "radi",
+    "host": "143.198.159.252",
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "checo",
+    "password": "Elradipet10Ltñ.",
+    "database": "radi",
+    "host": "143.198.159.252",
     "dialect": "mysql"
   }
 }

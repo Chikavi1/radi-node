@@ -13,6 +13,8 @@ const Users = require('../models/Users');
 const Reservations = require('../models/Reservations');
 const validateBody = require('../public/validateBody');
 const StripeController = require('../controllers/StripeController');
+const scoreControl = require('../public/scoreControl');
+
 const moment = MomentRange.extendMoment(Moment);
 
 module.exports.getReservationsWeek = async (req, res) => {
@@ -248,6 +250,10 @@ module.exports.insertReservation = async (req, res) => {
 
     payment_accepted = true;
 
+    // Aumentar score
+    scoreControl.increment(Vets(DB, DataTypes), id_vet, 1);
+    scoreControl.increment(Pets(DB, DataTypes), id_vet, 1);
+
     console.log(moment.utc(time).format('YYYY-MM-DD HH:mm:ss'))
     if (!payment_accepted) { // Pago NO aceptado
         res.status(503);
@@ -274,5 +280,20 @@ module.exports.insertReservation = async (req, res) => {
                 res.json(err);
             });
     }
+
+}
+
+module.exports.deleteReservation = async (req, res) => {
+
+    await Reservations(DB, DataTypes).update(
+        { status: 0 },
+        { where: { "id": req.body.id } })
+        .then(data => {
+            res.status(200);
+            res.json(data);
+        }).catch(err => {
+            res.status(503);
+            res.json(err);
+        })
 
 }
