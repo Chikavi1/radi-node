@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
     id_vet: DataTypes.STRING,
     id_pet: DataTypes.STRING,
     id_user: DataTypes.INTEGER,
+    id_service: DataTypes.INTEGER,
     duration: DataTypes.INTEGER,
     time: DataTypes.DATE,
     status: DataTypes.INTEGER,
-    id_service: DataTypes.INTEGER,
     code: DataTypes.STRING
   }, {
     sequelize: sequelize,
