@@ -1,5 +1,6 @@
 const passport = require('passport');
 const Usuarios = require('../models/Users');
+const Vets     = require('../models/Vets');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -11,40 +12,20 @@ const validateBody = require('../public/validateBody');
 const enviarEmail = require('../handlers/email');
 const Users = require('../models/Users');
 
-
-// exports.login = (req,res) => {
-//     res.render('login',{
-//         nombrePagina: 'Ingresa',
-//     });
-// }
-
-// exports.auth = passport.authenticate('local',{
-//     successRedirect: '/adopta',
-//     failureRedirect: '/login',
-//     failureFlash: true,
-//     badRequestMessage: 'Ambos campos son obligatorios.'
-// });
-
 exports.usuarioAutenticado = (req, res, next) => {
     // si el usuario esta autenticado, adelante
     if (req.isAuthenticated()) {
         return next();
     }
-
     // si no esta autentificado, redirigir al formulario
     return res.redirect('/login');
 }
-
-
-
-
 
 exports.googleauth = passport.authenticate('google', {
     scope: ['profile', 'email'],
 });
 
 exports.googleCallback = passport.authenticate('google', {
-
     successRedirect: '/',
     failureRedirect: '/iniciar-sesion',
     failureFlash: true
@@ -56,10 +37,7 @@ exports.googleCallback = passport.authenticate('google', {
 
 
 exports.loginApi = async (req, res, next) => {
-
-
     const { email, password } = req.body;
-
     // let validate = validateBody(await Usuarios(DB, DataTypes).describe(), req.body);
 
     // if (validate !== true) {
@@ -128,13 +106,9 @@ exports.enviarToken = async (req, res) => {
 
     usuario.token = crypto.randomBytes(20).toString('hex');
     usuario.expiration = Date.now() + 3600000;
-
     await usuario.save();
 
     const resetUrl = `http://localhost:3000/reestablecer/${usuario.token}`;
-    //    console.log(resetUrl);
-
-    //envia el correo con el token
     await enviarEmail.enviar({
         usuario,
         subject: 'Reestablecer contraseña',
@@ -150,23 +124,16 @@ exports.enviarToken = async (req, res) => {
 
 exports.actualizarPassword = async (req, res) => {
     console.log(req.body.password);
-    console.log('-------------------');
     console.log(req.params.token);
-    console.log('******************');
-
     const usuario = await Usuarios.findOne({
         where: {
             token: req.params.token,
 
         }
     });
-
     if (!usuario) {
         res.json({ mensaje: 'error,token no valido' });
-
     }
-
-
     usuario.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
     usuario.token = null;
     usuario.expiracion = null;
@@ -205,7 +172,6 @@ exports.getUser = async (req,res) => {
 exports.updateUser = async (req,res) => {
 
     const updateUser = req.body;
-
     await Users(DB, DataTypes).update(
         updateUser,
         { where: { "id": req.body.id} })
@@ -218,3 +184,37 @@ exports.updateUser = async (req,res) => {
         });
 
 }
+
+
+// vets
+
+exports.loginVet = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    const vet = await Vets(DB, Sequelize.DataTypes).findOne({ where: { email } });
+    if (!vet) {
+        await res.status(401).json({ mensaje: 'vet no existe.' });
+        next();
+    } else {
+        if (!bcrypt.compareSync(password, vet.password)) {
+            await res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
+            next();
+        } else {
+            const token = jwt.sign({
+                name: vet.name,
+                email: vet.email,
+                id: vet.id,
+                account: vet.account
+            },
+                'LLAVESECRETA',
+                {
+                    expiresIn: '1h'
+                });
+            await res.json({ token });
+
+        }
+    }
+
+
+}
+
