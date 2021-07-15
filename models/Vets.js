@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.INTEGER,
     score: DataTypes.INTEGER,
     currency: DataTypes.STRING,
-    account: DataTypes.STRING
+    account: DataTypes.STRING,
+    token: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Vets',

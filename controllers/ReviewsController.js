@@ -2,6 +2,9 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 
 const DB = require('../config/db');
 const Reviews = require('../models/Reviews');
+const Pets = require('../models/Pets');
+const Vets = require('../models/Vets');
+
 const validateBody = require('../public/validateBody');
 
 exports.createReview = async (req, res) => {
@@ -18,6 +21,11 @@ exports.createReview = async (req, res) => {
 
     await Reviews(DB, DataTypes).create({ id_vet, id_user, score, comment, date, status: (status || 1) })
     .then(() => {
+
+        // Aumentar score
+        scoreControl.increment(Vets(DB, DataTypes), id_vet, 1);
+        scoreControl.increment(Pets(DB, DataTypes), id_vet, 1);
+
         res.status(200);
         res.json('OK');
     }).catch((err) => {

@@ -4,6 +4,9 @@ const ResponseAdoptions  = require('../models/Responseadoptions');
 const validateBody = require('../public/validateBody');
 const { Sequelize, DataTypes, Op } = require('sequelize');
 const DB = require('../config/db');
+const Users = require('../models/Users');
+const Pets = require('../models/Pets');
+const { adoptionsAvailable } = require('./PetsController');
 
 // exports.add = async (req,res) => {
 //     // const {  
@@ -65,7 +68,9 @@ exports.getAdoptionsOrganization = async (req,res) => {
             "status": {[Op.ne]: 0}
         }
     });
-    res.json(adoptions);
+   
+    
+    res.json(mapAdoptions(adoptions));
 }
 
 exports.getAdoptionsUser = async (req,res) => {
@@ -75,9 +80,8 @@ exports.getAdoptionsUser = async (req,res) => {
             "status": {[Op.ne]: 0}
         }
     });
-    res.json(adoptions);}
-
-
+    res.json(mapAdoptions(adoptions));
+}
 
 
 exports.getAdoptionId = async (req,res) => {
@@ -87,7 +91,7 @@ exports.getAdoptionId = async (req,res) => {
             "status": {[Op.ne]: 0}
         }
     });
-    res.json(adoptions);
+    res.json(mapAdoptions(adoptions));
 }
 
 exports.updateAdoption = async (req,res) => {
@@ -127,4 +131,30 @@ exports.getResponseAdoption = async (req,res) => {
            }
         });
     res.json(adoptions);
+}
+
+async function mapAdoptions (adoptions) {
+
+    let final = [];
+
+    for (let item of adoptions) {
+
+        final.push(await getNamesUserAndPet(item.id_user, item.id_pet));
+
+    }
+
+    return final;
+
+}
+
+async function getNamesUserAndPet (id_user, id_pet) {
+
+    let [result, meta] = await DB.query(`
+        SELECT Users.name as user, Pets.name as pet FROM Users INNER JOIN Pets ON
+        Users.id = Pets.id_user WHERE
+        Users.id = ${id_user} AND Pets.id=${id_pet};
+    `);
+
+    return result[0];
+
 }

@@ -83,6 +83,7 @@ module.exports = function(){
     router.get('/reservations_week/:idVet', ReservationsController.getReservationsWeek);
     router.post('/create_reservation', ReservationsController.insertReservation);
     router.post('/prereservation', ReservationsController.preReservation);
+    router.post('/search_reservations', ReservationsController.searchReservations);
     router.get('/get_reservations_user/:idUser', ReservationsController.getReservationsByUser);
     router.get('/get_reservations_vet/:idVet/:limit/:offset', ReservationsController.getReservationsByVet);
     router.put('/update_reservation', ReservationsController.updateReservation);

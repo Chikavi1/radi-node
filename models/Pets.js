@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
+  
   Pets.init({
     description: DataTypes.TEXT,
     id_vacumms: DataTypes.INTEGER,
