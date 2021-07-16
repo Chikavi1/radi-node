@@ -70,7 +70,7 @@ exports.getAdoptionsOrganization = async (req,res) => {
     });
    
     
-    res.json(mapAdoptions(adoptions));
+    res.json(await mapAdoptions(adoptions));
 }
 
 exports.getAdoptionsUser = async (req,res) => {
@@ -80,7 +80,7 @@ exports.getAdoptionsUser = async (req,res) => {
             "status": {[Op.ne]: 0}
         }
     });
-    res.json(mapAdoptions(adoptions));
+    res.json(await mapAdoptions(adoptions));
 }
 
 
@@ -91,7 +91,7 @@ exports.getAdoptionId = async (req,res) => {
             "status": {[Op.ne]: 0}
         }
     });
-    res.json(mapAdoptions(adoptions));
+    res.json(await mapAdoptions(adoptions));
 }
 
 exports.updateAdoption = async (req,res) => {
@@ -130,8 +130,10 @@ exports.getResponseAdoption = async (req,res) => {
             id_request: req.params.id
            }
         });
-    res.json(adoptions);
+    res.json(await mapAdoptionsResponse(adoptions));
 }
+
+/////////////////////////////////////////
 
 async function mapAdoptions (adoptions) {
 
@@ -139,7 +141,7 @@ async function mapAdoptions (adoptions) {
 
     for (let item of adoptions) {
 
-        final.push(await getNamesUserAndPet(item.id_user, item.id_pet));
+        final.push(await getInfo(item.id_user, item.id_pet));
 
     }
 
@@ -147,12 +149,43 @@ async function mapAdoptions (adoptions) {
 
 }
 
-async function getNamesUserAndPet (id_user, id_pet) {
+async function mapAdoptionsResponse (adoptions) {
+
+    let final = [];
+
+    for (let item of adoptions) {
+
+        await Adoptions(DB, DataTypes).findAll({
+            where: {
+                id: item.id_request,
+                "status": {[Op.ne]: 0}
+            },
+            attributes: ['id', 'id_user', 'id_pet', 'id_organization', 'status', 'date']
+        }).then(async ([adopt]) => {
+
+            let info = await getInfo(adopt.dataValues.id_user, adopt.dataValues.id_pet);
+            final.push({
+                ...info,
+                ...adopt.dataValues
+            });
+
+
+        })
+        .catch((err) => final = err);
+
+
+    }
+
+    return final;
+
+}
+
+async function getInfo (id_user, id_pet) {
 
     let [result, meta] = await DB.query(`
-        SELECT Users.name as user, Pets.name as pet FROM Users INNER JOIN Pets ON
-        Users.id = Pets.id_user WHERE
-        Users.id = ${id_user} AND Pets.id=${id_pet};
+        SELECT U.name, U.email, U.cellphone, U.identification, U.address, P.name, P.breed FROM Users U INNER JOIN Pets P ON
+        U.id = P.id_user WHERE
+        U.id = ${id_user} AND P.id=${id_pet};
     `);
 
     return result[0];
